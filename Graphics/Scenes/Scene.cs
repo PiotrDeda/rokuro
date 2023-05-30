@@ -1,7 +1,6 @@
 using Rokuro.Input;
 using Rokuro.Math;
 using Rokuro.Objects;
-using SDL2;
 
 namespace Rokuro.Graphics;
 
@@ -36,15 +35,15 @@ public class Scene
 		foreach (IMouseInteractable interactable in MouseInteractables)
 			if (interactable.IsMouseOver(mousePosition))
 			{
-				if (!interactable.IsMousedOver)
+				if (!interactable.WasMouseoverHandled)
 				{
-					interactable.IsMousedOver = true;
-					interactable.OnMouseOver();
+					interactable.OnMouseover();
+					interactable.WasMouseoverHandled = true;
 				}
 			}
 			else
 			{
-				interactable.IsMousedOver = false;
+				interactable.WasMouseoverHandled = false;
 			}
 	}
 

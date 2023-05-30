@@ -29,8 +29,8 @@ class AppInstance
 
 		WindowData.BaseWidth = properties.WindowWidth;
 		WindowData.BaseHeight = properties.WindowHeight;
-		(Window, IntPtr Renderer) = MakeWindowRenderer(properties);
-		Drawer.Renderer = Renderer;
+		(Window, IntPtr renderer) = MakeWindowRenderer(properties);
+		Drawer.Renderer = renderer;
 		Drawer.BgColor = properties.BackgroundColor;
 		DefaultFont = LoadDefaultFont();
 
@@ -74,10 +74,7 @@ class AppInstance
 		Running = false;
 	}
 
-	internal IntPtr LoadTexture(string filename)
-	{
-		return SDL_image.IMG_LoadTexture(Drawer.Renderer, "assets" + filename);
-	}
+	internal IntPtr LoadTexture(string filename) => SDL_image.IMG_LoadTexture(Drawer.Renderer, "assets" + filename);
 
 	void InitSDL()
 	{

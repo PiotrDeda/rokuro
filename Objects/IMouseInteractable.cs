@@ -4,9 +4,9 @@ namespace Rokuro.Objects;
 
 public interface IMouseInteractable
 {
-	bool IsMouseOver(Vector mousePosition);
-	void OnMouseOver();
-	void OnClick();
+	bool WasMouseoverHandled { get; set; }
 
-	public bool IsMousedOver { get; set; }
+	bool IsMouseOver(Vector mousePosition);
+	void OnMouseover();
+	void OnClick();
 }

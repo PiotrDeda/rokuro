@@ -1,4 +1,3 @@
-using Rokuro.Core;
 using Rokuro.Math;
 
 namespace Rokuro.Graphics;

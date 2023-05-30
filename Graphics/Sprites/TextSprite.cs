@@ -6,8 +6,8 @@ namespace Rokuro.Graphics;
 
 public class TextSprite : Sprite
 {
-	private string _text = "";
-	private Color _color = new Color(255, 255, 255);
+	Color _color = new(255, 255, 255);
+	string _text = "";
 
 	public TextSprite(string initialText)
 	{

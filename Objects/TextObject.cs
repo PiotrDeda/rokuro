@@ -12,13 +12,13 @@ public class TextObject : SimpleObject, IDrawable
 
 	public string Text
 	{
-		get => ((TextSprite) Sprite).Text;
-		set => ((TextSprite) Sprite).Text = value;
+		get => ((TextSprite)Sprite).Text;
+		set => ((TextSprite)Sprite).Text = value;
 	}
-	
+
 	public Color Color
 	{
-		get => ((TextSprite) Sprite).Color;
-		set => ((TextSprite) Sprite).Color = value;
+		get => ((TextSprite)Sprite).Color;
+		set => ((TextSprite)Sprite).Color = value;
 	}
 }

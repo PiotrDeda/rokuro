@@ -2,7 +2,6 @@ namespace Rokuro.Core;
 
 class WindowData
 {
-	
 	public int BaseWidth { get; set; }
 	public int BaseHeight { get; set; }
 	public float WidthMultiplier { get; set; } = 1;

@@ -18,4 +18,5 @@ public class Sprite
 	public int Height { get; protected set; }
 
 	internal IntPtr Texture { get; set; }
+	internal IntPtr Clip { get; set; } = IntPtr.Zero;
 }

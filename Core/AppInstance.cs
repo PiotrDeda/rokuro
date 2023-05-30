@@ -61,7 +61,7 @@ class AppInstance
 
 			Drawer.RenderStart();
 			SceneManager.CurrentScene.DoRender();
-			Drawer.RenderEnd();
+			Drawer.RenderComplete();
 			SceneManager.SwitchScenes();
 		}
 

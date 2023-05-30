@@ -7,6 +7,8 @@ public class InteractableObject : SimpleObject, IMouseInteractable
 {
 	public InteractableObject(Sprite sprite, Camera camera) : base(sprite, camera) {}
 
+	public bool IsMousedOver { get; set; } = false;
+
 	public bool IsMouseOver(Vector mousePosition)
 	{
 		Vector screenPosition = Camera.GetScreenPosition(Position);
@@ -20,6 +22,4 @@ public class InteractableObject : SimpleObject, IMouseInteractable
 	public virtual void OnMouseOver() {}
 
 	public virtual void OnClick() {}
-
-	public bool IsMousedOver { get; set; } = false;
 }

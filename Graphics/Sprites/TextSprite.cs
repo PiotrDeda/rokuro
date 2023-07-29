@@ -34,7 +34,9 @@ public class TextSprite : Sprite
 		}
 	}
 
-	protected void RefreshTexture()
+	internal override IntPtr Clip => IntPtr.Zero;
+
+	void RefreshTexture()
 	{
 		IntPtr surface = SDL_ttf.TTF_RenderText_Blended_Wrapped(App.DefaultFont, Text, Color, 2000);
 		if (surface == IntPtr.Zero)

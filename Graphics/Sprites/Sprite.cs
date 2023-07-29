@@ -11,13 +11,14 @@ public class Sprite
 		Texture = App.LoadTexture(filename);
 		SDL.SDL_QueryTexture(Texture, out _, out _, out int width, out int height);
 		Width = width;
-		Height = height;
-		StateClips = new IntPtr[stateCount];
+		Height = height / stateCount;
+
+		Clips = new IntPtr[stateCount];
 		for (int i = 0; i < stateCount; i++)
 		{
 			IntPtr obj = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(SDL.SDL_Rect)));
 			Marshal.StructureToPtr(SDLExt.Rect(0, i * Height, Width, Height), obj, false);
-			StateClips[i] = obj;
+			Clips[i] = obj;
 		}
 	}
 
@@ -28,7 +29,7 @@ public class Sprite
 	public int State { get; set; }
 
 	internal IntPtr Texture { get; set; }
-	internal virtual IntPtr Clip => StateClips[State];
+	internal virtual IntPtr Clip => Clips[State];
 
-	IntPtr[] StateClips { get; } = new IntPtr[0];
+	protected IntPtr[] Clips { get; set; } = new IntPtr[0];
 }

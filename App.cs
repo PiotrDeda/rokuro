@@ -14,7 +14,9 @@ public static class App
 	internal static SceneManager SceneManager => Instance.SceneManager;
 	internal static InputManager InputManager => Instance.InputManager;
 
-	public static void Run(AppProperties properties) => Instance.Run(properties);
+	public static void Run(AppProperties properties, Dictionary<string, Sprite> sprites, List<Scene> scenes) =>
+		Instance.Run(properties, sprites, scenes);
+
 	public static void Quit() => Instance.Quit();
 
 	internal static IntPtr LoadTexture(string filename) => Instance.LoadTexture(filename);

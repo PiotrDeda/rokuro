@@ -6,13 +6,12 @@ public class SceneManager
 {
 	internal Scene CurrentScene { get; private set; } = new();
 
-	List<Scene> Scenes { get; } = new();
+	List<Scene> Scenes { get; set; } = new();
 	Scene NextScene { get; set; } = new();
 
-	public void LoadScenes(List<Scene> loadedScenes)
+	public void LoadScenes(List<Scene> scenes)
 	{
-		Scenes.Clear();
-		Scenes.AddRange(loadedScenes);
+		Scenes = scenes;
 		CurrentScene = Scenes[0];
 		NextScene = Scenes[0];
 	}

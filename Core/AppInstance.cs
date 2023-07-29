@@ -20,9 +20,9 @@ class AppInstance
 	bool SDLInitialized { get; set; }
 	bool Running { get; set; } = true;
 	IntPtr Window { get; set; }
-	Dictionary<string, Sprite> Sprites { get; } = new();
+	Dictionary<string, Sprite> Sprites { get; set; } = new();
 
-	public void Run(AppProperties properties)
+	public void Run(AppProperties properties, Dictionary<string, Sprite> sprites, List<Scene> scenes)
 	{
 		if (!SDLInitialized)
 			InitSDL();
@@ -33,6 +33,8 @@ class AppInstance
 		Drawer.Renderer = renderer;
 		Drawer.BgColor = properties.BackgroundColor;
 		DefaultFont = LoadDefaultFont();
+		Sprites = sprites;
+		SceneManager.LoadScenes(scenes);
 
 		while (Running)
 		{
@@ -74,7 +76,8 @@ class AppInstance
 		Running = false;
 	}
 
-	internal IntPtr LoadTexture(string filename) => SDL_image.IMG_LoadTexture(Drawer.Renderer, "assets" + filename);
+	internal IntPtr LoadTexture(string filename) =>
+		SDL_image.IMG_LoadTexture(Drawer.Renderer, $"assets/{filename}.png");
 
 	void InitSDL()
 	{

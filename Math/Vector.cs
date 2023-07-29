@@ -13,6 +13,18 @@ public struct Vector : IEquatable<Vector>
 	public float X { get; set; }
 	public float Y { get; set; }
 
+	public void Clamp(Vector min, Vector max)
+	{
+		if (X < min.X)
+			X = min.X;
+		else if (X > max.X)
+			X = max.X;
+		if (Y < min.Y)
+			Y = min.Y;
+		else if (Y > max.Y)
+			Y = max.Y;
+	}
+
 	public static Vector operator +(Vector a, Vector b) => new(a.X + b.X, a.Y + b.Y);
 	public static Vector operator -(Vector a, Vector b) => new(a.X - b.X, a.Y - b.Y);
 	public static Vector operator *(Vector a, Vector b) => new(a.X * b.X, a.Y * b.Y);

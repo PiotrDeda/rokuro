@@ -19,7 +19,7 @@ public class Scene
 			MouseInteractables.Add(interactable);
 	}
 
-	public virtual void Enter(Scene previousScene) {}
+	public virtual void OnEnter(Scene previousScene) {}
 	public virtual void HandleEvent(MouseWheelEvent e) {}
 	public virtual void HandleEvent(MouseMotionEvent e) {}
 	public virtual void HandleEvent(KeyEvent e) {}

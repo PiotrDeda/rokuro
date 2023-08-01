@@ -16,9 +16,9 @@ public class SceneManager
 		NextScene = Scenes[0];
 	}
 
-	public void SetNextScene(Scene scene)
+	public void SetNextScene(int sceneId)
 	{
-		NextScene = scene;
+		NextScene = Scenes[sceneId];
 		Logger.LogInfo($"Switching from {CurrentScene.Name} to {NextScene.Name}");
 	}
 
@@ -28,7 +28,7 @@ public class SceneManager
 		{
 			Scene previousScene = CurrentScene;
 			CurrentScene = NextScene;
-			CurrentScene.Enter(previousScene);
+			CurrentScene.OnEnter(previousScene);
 		}
 	}
 }

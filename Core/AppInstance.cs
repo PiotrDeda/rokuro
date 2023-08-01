@@ -22,7 +22,7 @@ class AppInstance
 	IntPtr Window { get; set; }
 	Dictionary<string, Sprite> Sprites { get; set; } = new();
 
-	public void Run(AppProperties properties, Dictionary<string, Sprite> sprites, List<Scene> scenes)
+	public void Run(AppProperties properties, Func<Dictionary<string, Sprite>> sprites, Func<List<Scene>> scenes)
 	{
 		if (!SDLInitialized)
 			InitSDL();
@@ -33,8 +33,8 @@ class AppInstance
 		Drawer.Renderer = renderer;
 		Drawer.BgColor = properties.BackgroundColor;
 		DefaultFont = LoadDefaultFont();
-		Sprites = sprites;
-		SceneManager.LoadScenes(scenes);
+		Sprites = sprites();
+		SceneManager.LoadScenes(scenes());
 
 		while (Running)
 		{
@@ -74,6 +74,15 @@ class AppInstance
 	{
 		Logger.LogInfo("Quitting...");
 		Running = false;
+	}
+
+	public Sprite GetSprite(string name)
+	{
+		if (Sprites.TryGetValue(name, out Sprite? sprite))
+			return sprite;
+
+		Logger.ThrowError($"Sprite {name} not found!");
+		return null!;
 	}
 
 	internal IntPtr LoadTexture(string filename) =>

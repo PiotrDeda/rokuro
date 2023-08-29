@@ -10,6 +10,7 @@ public static class App
 
 	public static SceneManager SceneManager => Instance.SceneManager;
 	public static InputManager InputManager => Instance.InputManager;
+	public static Random Rand => Instance.Rand;
 
 	internal static WindowData WindowData => Instance.WindowData;
 	internal static Drawer Drawer => Instance.Drawer;

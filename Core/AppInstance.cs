@@ -16,6 +16,7 @@ class AppInstance
 	public IntPtr DefaultFont { get; private set; }
 	public SceneManager SceneManager { get; } = new();
 	public InputManager InputManager { get; } = new();
+	public Random Rand { get; } = new();
 
 	bool SDLInitialized { get; set; }
 	bool Running { get; set; } = true;

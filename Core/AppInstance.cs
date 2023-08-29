@@ -86,6 +86,13 @@ class AppInstance
 		return null!;
 	}
 
+	public Vector GetMousePosition()
+	{
+		SDL.SDL_GetMouseState(out int x, out int y);
+		return new Vector((x - App.WindowData.WidthOffset) * App.WindowData.WidthMultiplier,
+			(y - App.WindowData.HeightOffset) * App.WindowData.HeightMultiplier);
+	}
+
 	internal IntPtr LoadTexture(string filename) =>
 		SDL_image.IMG_LoadTexture(Drawer.Renderer, $"assets/{filename}.png");
 
@@ -168,12 +175,5 @@ class AppInstance
 
 		WindowData.WidthMultiplier = baseWidth / width;
 		WindowData.HeightMultiplier = baseHeight / height;
-	}
-
-	Vector GetMousePosition()
-	{
-		SDL.SDL_GetMouseState(out int x, out int y);
-		return new Vector((x - App.WindowData.WidthOffset) * App.WindowData.WidthMultiplier,
-			(y - App.WindowData.HeightOffset) * App.WindowData.HeightMultiplier);
 	}
 }

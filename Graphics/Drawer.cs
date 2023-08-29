@@ -8,7 +8,7 @@ public class Drawer
 {
 	internal Drawer() {}
 
-	public Color BgColor { get; set; }
+	internal Color BgColor { get; set; }
 
 	internal IntPtr Renderer { get; set; }
 

@@ -6,7 +6,7 @@ public interface IMouseInteractable
 {
 	bool WasMouseoverHandled { get; set; }
 
-	bool IsMouseOver(Vector mousePosition);
+	bool IsMouseOver(Vector2D mousePosition);
 	void OnMouseover();
 	void OnClick();
 }

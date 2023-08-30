@@ -30,7 +30,7 @@ public class Scene
 			drawable.Draw();
 	}
 
-	internal void DoMouseOvers(Vector mousePosition)
+	internal void DoMouseOvers(Vector2D mousePosition)
 	{
 		foreach (IMouseInteractable interactable in MouseInteractables)
 			if (interactable.IsMouseOver(mousePosition))
@@ -47,7 +47,7 @@ public class Scene
 			}
 	}
 
-	internal void DoClicks(Vector mousePosition)
+	internal void DoClicks(Vector2D mousePosition)
 	{
 		foreach (IMouseInteractable interactable in MouseInteractables)
 			if (interactable.IsMouseOver(mousePosition))

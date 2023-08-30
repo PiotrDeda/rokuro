@@ -24,7 +24,7 @@ public static class App
 
 	public static Sprite GetSprite(string name) => Instance.GetSprite(name);
 
-	public static Vector GetMousePosition() => Instance.GetMousePosition();
+	public static Vector2D GetMousePosition() => Instance.GetMousePosition();
 
 	internal static IntPtr LoadTexture(string filename) => Instance.LoadTexture(filename);
 }

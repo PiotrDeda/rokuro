@@ -12,9 +12,10 @@ public class Drawer
 
 	internal IntPtr Renderer { get; set; }
 
-	public void Draw(Sprite sprite, Camera camera, Vector position)
+	public void Draw(Sprite sprite, Camera camera, Vector2D position)
 	{
-		SDL.SDL_Rect rect = SDLExt.Rect((int)position.X, (int)position.Y,
+		Vector2D screenPosition = camera.GetScreenPosition(position);
+		SDL.SDL_Rect rect = SDLExt.Rect(screenPosition.X, screenPosition.Y,
 			(int)(sprite.Width * camera.Scale), (int)(sprite.Height * camera.Scale));
 		SDL.SDL_RenderCopy(Renderer, sprite.Texture, sprite.Clip, ref rect);
 	}

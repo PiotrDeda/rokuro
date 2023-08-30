@@ -1,3 +1,5 @@
+using Rokuro.Math;
+
 namespace Rokuro.Input;
 
-public record MouseMotionEvent(int RelativeX, int RelativeY, bool LeftButton, bool RightButton);
+public record MouseMotionEvent(Vector2D RelativeMotion, bool LeftButton, bool RightButton);

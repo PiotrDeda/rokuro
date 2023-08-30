@@ -5,5 +5,5 @@ namespace Rokuro.Objects;
 public class BaseObject
 {
 	public bool Enabled { get; set; } = true;
-	public Vector Position { get; set; }
+	public Vector2D Position { get; set; }
 }

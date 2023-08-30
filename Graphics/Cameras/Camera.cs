@@ -24,8 +24,7 @@ public class Camera
 	float[] Scales { get; } = { 0.5f, 0.75f, 1.0f, 1.25f, 1.5f };
 	int SelectedScale { get; set; } = 2;
 
-	public virtual Vector2D GetScreenPosition(Vector2D position) =>
-		new((int)((position.X - Position.X) * Scale), (int)((position.Y - Position.Y) * Scale));
+	public virtual Vector2D GetScreenPosition(Vector2D position) => (position - Position) * Scale;
 
 	public void CenterOn(Vector2D position)
 	{

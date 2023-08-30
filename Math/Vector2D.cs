@@ -54,4 +54,6 @@ public struct Vector2D : IEquatable<Vector2D>
 	public bool Equals(Vector2D other) => this == other;
 	public override bool Equals(object? obj) => obj is Vector2D other && Equals(other);
 	public override int GetHashCode() => HashCode.Combine(X, Y);
+
+	public override string ToString() => $"[{X}, {Y}]";
 }

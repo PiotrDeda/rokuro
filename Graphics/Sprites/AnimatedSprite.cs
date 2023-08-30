@@ -16,19 +16,19 @@ public class AnimatedSprite : Sprite
 		FrameCount = (ulong)frameCount;
 		Delay = (ulong)delay;
 
-		Clips = new IntPtr[frameCount];
+		Clips = new IntPtr[frameCount * stateCount];
 		for (int i = 0; i < stateCount; i++)
 		{
 			for (int j = 0; j < frameCount; j++)
 			{
 				IntPtr obj = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(SDL.SDL_Rect)));
 				Marshal.StructureToPtr(SDLExt.Rect(j * Width, i * Height, Width, Height), obj, false);
-				Clips[j] = obj;
+				Clips[i * frameCount + j] = obj;
 			}
 		}
 	}
 
-	internal override IntPtr Clip => Clips[SDL.SDL_GetTicks64() / Delay % FrameCount + (ulong)State];
+	internal override IntPtr Clip => Clips[SDL.SDL_GetTicks64() / Delay % FrameCount]; // TODO: + (ulong)State
 
 	ulong FrameCount { get; }
 	ulong Delay { get; }

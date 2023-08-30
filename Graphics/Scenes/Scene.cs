@@ -20,9 +20,7 @@ public class Scene
 	}
 
 	public virtual void OnEnter(Scene previousScene) {}
-	public virtual void HandleEvent(MouseWheelEvent e) {}
-	public virtual void HandleEvent(MouseMotionEvent e) {}
-	public virtual void HandleEvent(KeyEvent e) {}
+	public virtual void HandleEvent(IInputEvent e) {}
 
 	public virtual void DoRender()
 	{

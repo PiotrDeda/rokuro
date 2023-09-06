@@ -13,7 +13,7 @@ class AppInstance
 {
 	public WindowData WindowData { get; } = new();
 	public Drawer Drawer { get; } = new();
-	public IntPtr DefaultFont { get; private set; }
+	public SpriteManager SpriteManager { get; } = new();
 	public SceneManager SceneManager { get; } = new();
 	public InputManager InputManager { get; } = new();
 	public Random Rand { get; } = new();
@@ -21,9 +21,9 @@ class AppInstance
 	bool SDLInitialized { get; set; }
 	bool Running { get; set; } = true;
 	IntPtr Window { get; set; }
-	Dictionary<string, Sprite> Sprites { get; set; } = new();
 
-	public void Run(AppProperties properties, Func<Dictionary<string, Sprite>> sprites, Func<List<Scene>> scenes)
+	public void Run(AppProperties properties, Func<Dictionary<string, StaticSpriteTemplate>> spriteTemplates,
+		Func<List<Scene>> scenes)
 	{
 		if (!SDLInitialized)
 			InitSDL();
@@ -33,8 +33,7 @@ class AppInstance
 		(Window, IntPtr renderer) = MakeWindowRenderer(properties);
 		Drawer.Renderer = renderer;
 		Drawer.BgColor = properties.BackgroundColor;
-		DefaultFont = LoadDefaultFont();
-		Sprites = sprites();
+		SpriteManager.LoadSpriteTemplates(spriteTemplates());
 		SceneManager.LoadScenes(scenes());
 
 		while (Running)
@@ -77,24 +76,12 @@ class AppInstance
 		Running = false;
 	}
 
-	public Sprite GetSprite(string name)
-	{
-		if (Sprites.TryGetValue(name, out Sprite? sprite))
-			return sprite;
-
-		Logger.ThrowError($"Sprite {name} not found!");
-		return null!;
-	}
-
 	public Vector2D GetMousePosition()
 	{
 		SDL.SDL_GetMouseState(out int x, out int y);
 		return new Vector2D((int)((x - App.WindowData.WidthOffset) * App.WindowData.WidthMultiplier),
 			(int)((y - App.WindowData.HeightOffset) * App.WindowData.HeightMultiplier));
 	}
-
-	internal IntPtr LoadTexture(string filename) =>
-		SDL_image.IMG_LoadTexture(Drawer.Renderer, $"assets/{filename}.png");
 
 	void InitSDL()
 	{
@@ -128,6 +115,7 @@ class AppInstance
 		if (window == IntPtr.Zero)
 			Logger.ThrowSDLError("Window could not be created!", ErrorSource.SDL);
 
+		// TODO: Animation speed is wrong without VSync – needs a deeper fix
 		IntPtr renderer = SDL.SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 		if (renderer == IntPtr.Zero)
 			Logger.ThrowSDLError("Renderer could not be created!", ErrorSource.SDL);
@@ -135,14 +123,6 @@ class AppInstance
 		SDL.SDL_RenderSetLogicalSize(renderer, WindowData.BaseWidth, WindowData.BaseHeight);
 
 		return (window, renderer);
-	}
-
-	IntPtr LoadDefaultFont()
-	{
-		IntPtr font = SDL_ttf.TTF_OpenFont("assets_engine/CascadiaMono.ttf", 20);
-		if (font == IntPtr.Zero)
-			Logger.ThrowSDLError("Failed to load font", ErrorSource.TTF);
-		return font;
 	}
 
 	void UpdateWindowSize()

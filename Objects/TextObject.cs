@@ -3,7 +3,7 @@ using Rokuro.Math;
 
 namespace Rokuro.Objects;
 
-public class TextObject : SimpleObject, IDrawable
+public class TextObject : SimpleObject
 {
 	public TextObject(string initialText, Camera camera) : base(new TextSprite(initialText), camera)
 	{

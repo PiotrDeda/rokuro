@@ -1,35 +1,21 @@
-using System.Runtime.InteropServices;
-using Rokuro.Core;
-using SDL2;
-
 namespace Rokuro.Graphics;
 
-public class AnimatedSprite : Sprite
+public class AnimatedSprite : ISprite
 {
-	public AnimatedSprite(string filename, int frameCount, int delay, int stateCount = 1)
+	public AnimatedSprite(AnimatedSpriteTemplate template)
 	{
-		Texture = App.LoadTexture(filename);
-		SDL.SDL_QueryTexture(Texture, out _, out _, out int width, out int height);
-		Width = width / frameCount;
-		Height = height / stateCount;
-
-		FrameCount = (ulong)frameCount;
-		Delay = (ulong)delay;
-
-		Clips = new IntPtr[frameCount * stateCount];
-		for (int i = 0; i < stateCount; i++)
-		{
-			for (int j = 0; j < frameCount; j++)
-			{
-				IntPtr obj = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(SDL.SDL_Rect)));
-				Marshal.StructureToPtr(SDLExt.Rect(j * Width, i * Height, Width, Height), obj, false);
-				Clips[i * frameCount + j] = obj;
-			}
-		}
+		Template = template;
 	}
 
-	internal override IntPtr Clip => Clips[SDL.SDL_GetTicks64() / Delay % FrameCount]; // TODO: + (ulong)State
+	public int State { get; set; }
 
-	ulong FrameCount { get; }
-	ulong Delay { get; }
+	AnimatedSpriteTemplate Template { get; }
+	int CurrentFrame { get; set; }
+
+	public int Width() => Template.Width;
+	public int Height() => Template.Height;
+	public IntPtr Texture() => Template.Texture;
+
+	public IntPtr Clip() => Template.Clips[CurrentFrame++ / Template.Delay % Template.FrameCount
+										   + State * Template.FrameCount];
 }

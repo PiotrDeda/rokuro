@@ -4,11 +4,11 @@ using SDL2;
 
 namespace Rokuro.Graphics;
 
-public class Sprite
+public class StaticSpriteTemplate
 {
-	public Sprite(string filename, int stateCount = 1)
+	public StaticSpriteTemplate(string filename, int stateCount = 1)
 	{
-		Texture = App.LoadTexture(filename);
+		Texture = App.SpriteManager.LoadTexture(filename);
 		SDL.SDL_QueryTexture(Texture, out _, out _, out int width, out int height);
 		Width = width;
 		Height = height / stateCount;
@@ -22,14 +22,11 @@ public class Sprite
 		}
 	}
 
-	internal Sprite() {}
+	internal StaticSpriteTemplate() {}
 
-	public int Width { get; protected set; }
-	public int Height { get; protected set; }
-	public int State { get; set; }
+	protected internal int Width { get; protected set; }
+	protected internal int Height { get; protected set; }
 
-	internal IntPtr Texture { get; set; }
-	internal virtual IntPtr Clip => Clips[State];
-
-	protected IntPtr[] Clips { get; set; } = new IntPtr[0];
+	protected internal IntPtr Texture { get; protected set; }
+	protected internal IntPtr[] Clips { get; protected set; } = new IntPtr[0];
 }

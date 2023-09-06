@@ -4,7 +4,7 @@ using SDL2;
 
 namespace Rokuro.Graphics;
 
-public class TextSprite : Sprite
+public class TextSprite : ISprite
 {
 	Color _color = new(255, 255, 255);
 	string _text = "";
@@ -34,11 +34,18 @@ public class TextSprite : Sprite
 		}
 	}
 
-	internal override IntPtr Clip => IntPtr.Zero;
+	IntPtr Texture { get; set; }
+	int Width { get; set; }
+	int Height { get; set; }
+
+	int ISprite.Width() => Width;
+	int ISprite.Height() => Height;
+	IntPtr ISprite.Texture() => Texture;
+	public IntPtr Clip() => IntPtr.Zero;
 
 	void RefreshTexture()
 	{
-		IntPtr surface = SDL_ttf.TTF_RenderText_Blended_Wrapped(App.DefaultFont, Text, Color, 2000);
+		IntPtr surface = SDL_ttf.TTF_RenderText_Blended_Wrapped(App.SpriteManager.DefaultFont, Text, Color, 2000);
 		if (surface == IntPtr.Zero)
 			Logger.ThrowSDLError($"Failed to create surface from text: {Text}", ErrorSource.TTF);
 		Texture = SDL.SDL_CreateTextureFromSurface(App.Drawer.Renderer, surface);

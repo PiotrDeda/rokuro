@@ -1,4 +1,4 @@
-namespace Rokuro.Math;
+namespace Rokuro.MathUtils;
 
 public struct Vector2D : IEquatable<Vector2D>
 {

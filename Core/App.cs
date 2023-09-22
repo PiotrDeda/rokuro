@@ -1,6 +1,6 @@
 using Rokuro.Graphics;
 using Rokuro.Input;
-using Rokuro.Math;
+using Rokuro.MathUtils;
 
 namespace Rokuro.Core;
 

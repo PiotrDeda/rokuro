@@ -1,4 +1,4 @@
-using Rokuro.Math;
+using Rokuro.MathUtils;
 
 namespace Rokuro.Core;
 

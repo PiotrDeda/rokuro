@@ -1,6 +1,6 @@
 using Rokuro.Graphics;
 using Rokuro.Input;
-using Rokuro.Math;
+using Rokuro.MathUtils;
 using SDL2;
 using static SDL2.SDL.SDL_EventType;
 using static SDL2.SDL.SDL_RendererFlags;

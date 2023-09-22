@@ -1,6 +1,6 @@
 using SDL2;
 
-namespace Rokuro.Math;
+namespace Rokuro.MathUtils;
 
 public struct Color
 {

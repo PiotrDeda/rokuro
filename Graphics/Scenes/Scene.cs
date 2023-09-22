@@ -1,5 +1,5 @@
 using Rokuro.Input;
-using Rokuro.Math;
+using Rokuro.MathUtils;
 using Rokuro.Objects;
 
 namespace Rokuro.Graphics;

@@ -1,5 +1,5 @@
 using Rokuro.Core;
-using Rokuro.Math;
+using Rokuro.MathUtils;
 using SDL2;
 
 namespace Rokuro.Graphics;

@@ -37,11 +37,11 @@ public struct Vector2D : IEquatable<Vector2D>
 	public static Vector2D operator -(int a, Vector2D b) => new(a - b.X, a - b.Y);
 	public static Vector2D operator *(int a, Vector2D b) => new(a * b.X, a * b.Y);
 	public static Vector2D operator /(int a, Vector2D b) => new(a / b.X, a / b.Y);
-	
-	
+
+
 	public static Vector2D operator *(Vector2D a, float b) => new((int)(a.X * b), (int)(a.Y * b));
 	public static Vector2D operator /(Vector2D a, float b) => new((int)(a.X / b), (int)(a.Y / b));
-	
+
 	public static Vector2D operator *(float a, Vector2D b) => new((int)(a * b.X), (int)(a * b.Y));
 	public static Vector2D operator /(float a, Vector2D b) => new((int)(a / b.X), (int)(a / b.Y));
 

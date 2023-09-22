@@ -1,4 +1,5 @@
 // ReSharper disable InconsistentNaming
+
 namespace Rokuro.Input;
 
 public enum Keycode

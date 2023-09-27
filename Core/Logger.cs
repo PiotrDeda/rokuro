@@ -19,7 +19,7 @@ public static class Logger
 		SDL.SDL_LogCritical((int)SDL.SDL_LogCategory.SDL_LOG_CATEGORY_APPLICATION, message);
 		SDL.SDL_ShowSimpleMessageBox(SDL.SDL_MessageBoxFlags.SDL_MESSAGEBOX_ERROR, "An error has occurred", message,
 			IntPtr.Zero);
-		throw new Exception(message);
+		throw new(message);
 	}
 
 	internal static void ThrowSDLError(string message, ErrorSource source = ErrorSource.None) =>

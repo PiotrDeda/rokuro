@@ -1,5 +1,4 @@
 using Rokuro.Core;
-using Rokuro.MathUtils;
 using SDL2;
 using static SDL2.SDL.SDL_EventType;
 
@@ -27,14 +26,14 @@ public class InputManager
 		{
 			case SDL_MOUSEMOTION:
 				App.SceneManager.CurrentScene.HandleEvent(new MouseMotionEvent(
-					new Vector2D(e.motion.xrel, e.motion.yrel),
+					new(e.motion.xrel, e.motion.yrel),
 					(e.motion.state & SDL.SDL_BUTTON_LMASK) != 0,
 					(e.motion.state & SDL.SDL_BUTTON_RMASK) != 0
 				));
 				break;
 			case SDL_MOUSEWHEEL:
 				App.SceneManager.CurrentScene.HandleEvent(new MouseWheelEvent(
-					new Vector2D(e.wheel.x, e.wheel.y)
+					new(e.wheel.x, e.wheel.y)
 				));
 				break;
 			case SDL_KEYDOWN:

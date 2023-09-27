@@ -79,7 +79,7 @@ class AppInstance
 	public Vector2D GetMousePosition()
 	{
 		SDL.SDL_GetMouseState(out int x, out int y);
-		return new Vector2D((int)((x - App.WindowData.WidthOffset) * App.WindowData.WidthMultiplier),
+		return new((int)((x - App.WindowData.WidthOffset) * App.WindowData.WidthMultiplier),
 			(int)((y - App.WindowData.HeightOffset) * App.WindowData.HeightMultiplier));
 	}
 

@@ -28,7 +28,7 @@ public class SpriteManager
 	}
 
 	internal IntPtr LoadTexture(string filename) =>
-		SDL_image.IMG_LoadTexture(App.Drawer.Renderer, $"assets/{filename}.png");
+		SDL_image.IMG_LoadTexture(App.Drawer.Renderer, $"assets/textures/{filename}.png");
 
 	IntPtr LoadDefaultFont()
 	{

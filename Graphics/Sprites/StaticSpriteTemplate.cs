@@ -6,9 +6,9 @@ namespace Rokuro.Graphics;
 
 public class StaticSpriteTemplate
 {
-	public StaticSpriteTemplate(string filename, int stateCount = 1)
+	public StaticSpriteTemplate(Texture texture, int stateCount = 1)
 	{
-		Texture = App.SpriteManager.LoadTexture(filename);
+		Texture = texture.Get();
 		SDL.SDL_QueryTexture(Texture, out _, out _, out int width, out int height);
 		Width = width;
 		Height = height / stateCount;

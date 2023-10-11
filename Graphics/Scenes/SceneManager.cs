@@ -15,7 +15,7 @@ public class SceneManager
 		Logger.LogInfo($"Switching from {CurrentScene.Name} to {NextScene.Name}");
 	}
 
-	internal void LoadScenes(List<Scene> scenes)
+	public void LoadScenes(List<Scene> scenes)
 	{
 		Scenes = scenes;
 		CurrentScene = Scenes[0];

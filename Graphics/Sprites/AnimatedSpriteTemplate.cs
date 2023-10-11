@@ -6,9 +6,9 @@ namespace Rokuro.Graphics;
 
 public class AnimatedSpriteTemplate : StaticSpriteTemplate
 {
-	public AnimatedSpriteTemplate(string filename, int frameCount, int delay, int stateCount = 1)
+	public AnimatedSpriteTemplate(Texture texture, int frameCount, int delay, int stateCount = 1)
 	{
-		Texture = App.SpriteManager.LoadTexture(filename);
+		Texture = texture.Get();
 		SDL.SDL_QueryTexture(Texture, out _, out _, out int width, out int height);
 		Width = width / frameCount;
 		Height = height / stateCount;

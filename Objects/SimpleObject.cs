@@ -1,4 +1,3 @@
-using Rokuro.Core;
 using Rokuro.Graphics;
 
 namespace Rokuro.Objects;
@@ -17,6 +16,6 @@ public class SimpleObject : BaseObject, IDrawable
 	public void Draw()
 	{
 		if (Enabled)
-			App.Drawer.Draw(Sprite, Camera, Position);
+			Camera.Draw(Sprite, Position);
 	}
 }

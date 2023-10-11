@@ -1,5 +1,5 @@
 using Rokuro.MathUtils;
 
-namespace Rokuro.Input;
+namespace Rokuro.Inputs;
 
 public record MouseMotionEvent(Vector2D RelativeMotion, bool LeftButton, bool RightButton) : IInputEvent;

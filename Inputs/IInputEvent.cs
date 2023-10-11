@@ -1,3 +1,3 @@
-namespace Rokuro.Input;
+namespace Rokuro.Inputs;
 
 public interface IInputEvent {}

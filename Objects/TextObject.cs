@@ -5,20 +5,47 @@ namespace Rokuro.Objects;
 
 public class TextObject : SimpleObject
 {
-	public TextObject(string initialText, Camera camera) : base(new TextSprite(initialText), camera)
+	Color _color;
+	Font _font;
+	string _text;
+
+	public TextObject(Camera camera, string text, Color color, Font font) : base(new TextSprite(), camera)
 	{
-		Text = initialText;
+		_text = text;
+		_color = color;
+		_font = font;
+		Sprite.RefreshTexture(Text, Font, Color, Camera.Drawer.Renderer);
 	}
 
 	public string Text
 	{
-		get => ((TextSprite)Sprite).Text;
-		set => ((TextSprite)Sprite).Text = value;
+		get => _text;
+		set
+		{
+			_text = value;
+			Sprite.RefreshTexture(_text, Font, Color, Camera.Drawer.Renderer);
+		}
 	}
 
 	public Color Color
 	{
-		get => ((TextSprite)Sprite).Color;
-		set => ((TextSprite)Sprite).Color = value;
+		get => _color;
+		set
+		{
+			_color = value;
+			Sprite.RefreshTexture(Text, Font, _color, Camera.Drawer.Renderer);
+		}
 	}
+
+	public Font Font
+	{
+		get => _font;
+		set
+		{
+			_font = value;
+			Sprite.RefreshTexture(Text, _font, Color, Camera.Drawer.Renderer);
+		}
+	}
+
+	public new TextSprite Sprite => (TextSprite)base.Sprite;
 }

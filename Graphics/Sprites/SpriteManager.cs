@@ -5,13 +5,20 @@ namespace Rokuro.Graphics;
 
 public class SpriteManager
 {
-	internal IntPtr DefaultFont { get; private set; }
+	public SpriteManager(IntPtr renderer)
+	{
+		DefaultFont = LoadDefaultFont();
+		Renderer = renderer;
+	}
 
-	Dictionary<string, StaticSpriteTemplate> SpritesTemplates { get; set; } = new();
+	public Font DefaultFont { get; private set; }
+
+	IntPtr Renderer { get; }
+	Dictionary<string, StaticSpriteTemplate> SpriteTemplates { get; set; } = new();
 
 	public ISprite CreateSpriteFromTemplate(string name)
 	{
-		if (SpritesTemplates.TryGetValue(name, out StaticSpriteTemplate? template))
+		if (SpriteTemplates.TryGetValue(name, out StaticSpriteTemplate? template))
 			if (template is AnimatedSpriteTemplate animatedTemplate)
 				return new AnimatedSprite(animatedTemplate);
 			else
@@ -21,20 +28,19 @@ public class SpriteManager
 		return null!;
 	}
 
-	internal void LoadSpriteTemplates(Dictionary<string, StaticSpriteTemplate> sprites)
+	public void LoadSpriteTemplates(Dictionary<string, StaticSpriteTemplate> sprites)
 	{
-		SpritesTemplates = sprites;
-		DefaultFont = LoadDefaultFont();
+		SpriteTemplates = sprites;
 	}
 
-	internal IntPtr LoadTexture(string filename) =>
-		SDL_image.IMG_LoadTexture(App.Drawer.Renderer, $"assets/textures/{filename}.png");
+	public Texture LoadTexture(string filename) =>
+		new(SDL_image.IMG_LoadTexture(Renderer, $"assets/textures/{filename}.png"));
 
-	IntPtr LoadDefaultFont()
+	Font LoadDefaultFont()
 	{
 		IntPtr font = SDL_ttf.TTF_OpenFont("assets_engine/CascadiaMono.ttf", 20);
 		if (font == IntPtr.Zero)
 			Logger.ThrowSDLError("Failed to load font", ErrorSource.TTF);
-		return font;
+		return new(font);
 	}
 }

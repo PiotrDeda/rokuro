@@ -6,17 +6,22 @@ namespace Rokuro.Graphics;
 
 public class Drawer
 {
-	internal Drawer() {}
-
-	internal Color BgColor { get; set; }
-
-	internal IntPtr Renderer { get; set; }
-
-	public void Draw(ISprite sprite, Camera camera, Vector2D position)
+	internal Drawer(IntPtr renderer, WindowData windowData, Color bgColor)
 	{
-		Vector2D screenPosition = camera.GetScreenPosition(position);
-		SDL.SDL_Rect rect = SDLExt.Rect(screenPosition.X, screenPosition.Y,
-			(int)(sprite.Width() * camera.Scale), (int)(sprite.Height() * camera.Scale));
+		Renderer = renderer;
+		WindowData = windowData;
+		BgColor = bgColor;
+	}
+
+	internal IntPtr Renderer { get; }
+
+	WindowData WindowData { get; }
+	Color BgColor { get; }
+
+	public void Draw(ISprite sprite, Vector2D position, float scale)
+	{
+		SDL.SDL_Rect rect = SDLExt.Rect(position.X, position.Y,
+			(int)(sprite.Width() * scale), (int)(sprite.Height() * scale));
 		SDL.SDL_RenderCopy(Renderer, sprite.Texture(), sprite.Clip(), ref rect);
 	}
 
@@ -26,7 +31,7 @@ public class Drawer
 		SDL.SDL_RenderClear(Renderer);
 
 		SDL.SDL_SetRenderDrawColor(Renderer, BgColor.R, BgColor.G, BgColor.B, BgColor.A);
-		SDL.SDL_Rect rect = SDLExt.Rect(0, 0, App.WindowData.BaseWidth, App.WindowData.BaseHeight);
+		SDL.SDL_Rect rect = SDLExt.Rect(0, 0, WindowData.BaseWidth, WindowData.BaseHeight);
 		SDL.SDL_RenderFillRect(Renderer, ref rect);
 	}
 

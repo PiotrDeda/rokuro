@@ -1,5 +1,5 @@
 using Rokuro.MathUtils;
 
-namespace Rokuro.Input;
+namespace Rokuro.Inputs;
 
 public record MouseWheelEvent(Vector2D Scroll) : IInputEvent;

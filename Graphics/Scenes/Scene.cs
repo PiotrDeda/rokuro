@@ -19,7 +19,7 @@ public class Scene
 			MouseInteractables.Add(interactable);
 	}
 
-	public virtual void OnEnter(Scene previousScene) {}
+	public virtual void OnEnter() {}
 	public virtual void HandleEvent(IInputEvent e) {}
 
 	public virtual void DoRender()

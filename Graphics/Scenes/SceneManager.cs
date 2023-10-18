@@ -26,9 +26,8 @@ public class SceneManager
 	{
 		if (CurrentScene != NextScene)
 		{
-			Scene previousScene = CurrentScene;
 			CurrentScene = NextScene;
-			CurrentScene.OnEnter(previousScene);
+			CurrentScene.OnEnter();
 		}
 	}
 }

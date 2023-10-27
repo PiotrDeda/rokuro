@@ -14,21 +14,18 @@ public class SpriteManager
 	public Font DefaultFont { get; private set; }
 
 	IntPtr Renderer { get; }
-	Dictionary<string, StaticSpriteTemplate> SpriteTemplates { get; set; } = new();
+	Dictionary<string, SpriteTemplate> SpriteTemplates { get; set; } = new();
 
-	public ISprite CreateSpriteFromTemplate(string name)
+	public T CreateSprite<T>(string name) where T : ISprite
 	{
-		if (SpriteTemplates.TryGetValue(name, out StaticSpriteTemplate? template))
-			if (template is AnimatedSpriteTemplate animatedTemplate)
-				return new AnimatedSprite(animatedTemplate);
-			else
-				return new StaticSprite(template);
+		if (SpriteTemplates.TryGetValue(name, out SpriteTemplate? template))
+			return (T)Activator.CreateInstance(typeof(T), template)!;
 
 		Logger.ThrowError($"Sprite {name} not found!");
-		return null!;
+		throw new();
 	}
 
-	public void LoadSpriteTemplates(Dictionary<string, StaticSpriteTemplate> sprites)
+	public void LoadSpriteTemplates(Dictionary<string, SpriteTemplate> sprites)
 	{
 		SpriteTemplates = sprites;
 	}

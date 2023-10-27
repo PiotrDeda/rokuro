@@ -4,7 +4,7 @@ public class AnimatedSprite : ISprite
 {
 	int _state;
 	
-	public AnimatedSprite(AnimatedSpriteTemplate template)
+	public AnimatedSprite(SpriteTemplate template)
 	{
 		Template = template;
 	}
@@ -23,7 +23,7 @@ public class AnimatedSprite : ISprite
 		}
 	}
 
-	AnimatedSpriteTemplate Template { get; }
+	SpriteTemplate Template { get; }
 	int CurrentFrame { get; set; }
 
 	public int Width() => Template.Width;

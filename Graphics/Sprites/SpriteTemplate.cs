@@ -4,9 +4,9 @@ using SDL2;
 
 namespace Rokuro.Graphics;
 
-public class AnimatedSpriteTemplate : StaticSpriteTemplate
+public class SpriteTemplate
 {
-	public AnimatedSpriteTemplate(Texture texture, int frameCount, int delay, int stateCount = 1)
+	public SpriteTemplate(Texture texture, int stateCount, int frameCount, int delay)
 	{
 		Texture = texture.Get();
 		SDL.SDL_QueryTexture(Texture, out _, out _, out int width, out int height);
@@ -27,7 +27,15 @@ public class AnimatedSpriteTemplate : StaticSpriteTemplate
 			}
 		}
 	}
+	
+	public SpriteTemplate(Texture texture) : this(texture, 1, 1, 30) {}
 
+	internal SpriteTemplate() {}
+
+	internal int Width { get;  }
+	internal int Height { get; }
 	internal int FrameCount { get; }
 	internal int Delay { get; }
+	internal IntPtr Texture { get; }
+	internal IntPtr[] Clips { get; } = new IntPtr[0];
 }

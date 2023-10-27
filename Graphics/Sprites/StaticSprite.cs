@@ -4,7 +4,7 @@ public class StaticSprite : ISprite
 {
 	int _state;
 	
-	public StaticSprite(StaticSpriteTemplate template)
+	public StaticSprite(SpriteTemplate template)
 	{
 		Template = template;
 	}
@@ -23,7 +23,7 @@ public class StaticSprite : ISprite
 		}
 	}
 
-	StaticSpriteTemplate Template { get; }
+	SpriteTemplate Template { get; }
 
 	public int Width() => Template.Width;
 	public int Height() => Template.Height;

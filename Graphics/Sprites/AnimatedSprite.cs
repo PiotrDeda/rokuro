@@ -3,7 +3,7 @@ namespace Rokuro.Graphics;
 public class AnimatedSprite : ISprite
 {
 	int _state;
-	
+
 	public AnimatedSprite(SpriteTemplate template)
 	{
 		Template = template;
@@ -26,10 +26,9 @@ public class AnimatedSprite : ISprite
 	SpriteTemplate Template { get; }
 	int CurrentFrame { get; set; }
 
-	public int Width() => Template.Width;
-	public int Height() => Template.Height;
-	public IntPtr Texture() => Template.Texture;
+	public int GetWidth() => Template.Width;
+	public int GetHeight() => Template.Height;
 
-	public IntPtr Clip() => Template.Clips[CurrentFrame++ / Template.Delay % Template.FrameCount
-										   + State * Template.FrameCount];
+	public (IntPtr texture, IntPtr clip) GetRenderData() => (Template.Texture,
+		Template.Clips[CurrentFrame++ / Template.Delay % Template.FrameCount + State * Template.FrameCount]);
 }

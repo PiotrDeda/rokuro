@@ -20,9 +20,13 @@ public class Drawer
 
 	public void Draw(ISprite sprite, Vector2D position, float scale)
 	{
-		SDL.SDL_Rect rect = SDLExt.Rect(position.X, position.Y,
-			(int)(sprite.Width() * scale), (int)(sprite.Height() * scale));
-		SDL.SDL_RenderCopy(Renderer, sprite.Texture(), sprite.Clip(), ref rect);
+		(IntPtr texture, IntPtr clip) = sprite.GetRenderData();
+		if (texture != IntPtr.Zero)
+		{
+			SDL.SDL_Rect rect = SDLExt.Rect(position.X, position.Y,
+				(int)(sprite.GetWidth() * scale), (int)(sprite.GetHeight() * scale));
+			SDL.SDL_RenderCopy(Renderer, texture, clip, ref rect);
+		}
 	}
 
 	internal void RenderStart()

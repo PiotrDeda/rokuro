@@ -3,7 +3,7 @@ namespace Rokuro.Graphics;
 public class StaticSprite : ISprite
 {
 	int _state;
-	
+
 	public StaticSprite(SpriteTemplate template)
 	{
 		Template = template;
@@ -25,8 +25,8 @@ public class StaticSprite : ISprite
 
 	SpriteTemplate Template { get; }
 
-	public int Width() => Template.Width;
-	public int Height() => Template.Height;
-	public IntPtr Texture() => Template.Texture;
-	public IntPtr Clip() => Template.Clips[State];
+	public int GetWidth() => Template.Width;
+	public int GetHeight() => Template.Height;
+
+	public (IntPtr texture, IntPtr clip) GetRenderData() => (Template.Texture, Template.Clips[State]);
 }

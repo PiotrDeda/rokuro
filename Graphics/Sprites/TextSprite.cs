@@ -10,10 +10,9 @@ public class TextSprite : ISprite
 	int Width { get; set; }
 	int Height { get; set; }
 
-	int ISprite.Width() => Width;
-	int ISprite.Height() => Height;
-	IntPtr ISprite.Texture() => Texture;
-	public IntPtr Clip() => IntPtr.Zero;
+	int ISprite.GetWidth() => Width;
+	int ISprite.GetHeight() => Height;
+	public (IntPtr texture, IntPtr clip) GetRenderData() => (Texture, IntPtr.Zero);
 
 	internal void RefreshTexture(string text, Font font, Color color, IntPtr renderer)
 	{

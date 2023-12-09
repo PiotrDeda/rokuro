@@ -27,12 +27,12 @@ public class SpriteTemplate
 			}
 		}
 	}
-	
+
 	public SpriteTemplate(Texture texture) : this(texture, 1, 1, 30) {}
 
 	internal SpriteTemplate() {}
 
-	internal int Width { get;  }
+	internal int Width { get; }
 	internal int Height { get; }
 	internal int FrameCount { get; }
 	internal int Delay { get; }

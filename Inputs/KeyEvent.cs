@@ -1,3 +1,3 @@
 namespace Rokuro.Inputs;
 
-public class KeyEvent : IInputEvent {}
+public class KeyEvent : IInputEvent;

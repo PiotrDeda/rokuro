@@ -6,14 +6,14 @@ namespace Rokuro.Objects;
 public class GameObject
 {
 	public GameObject() {}
-	
+
 	public GameObject(Vector2D position, ISprite sprite, Camera camera)
 	{
 		Position = position;
 		Sprite = sprite;
 		Camera = camera;
 	}
-	
+
 	public bool Enabled { get; set; } = true;
 	public Vector2D Position { get; set; }
 	public ISprite? Sprite { get; set; }

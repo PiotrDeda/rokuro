@@ -3,17 +3,18 @@ using Rokuro.MathUtils;
 
 namespace Rokuro.Objects;
 
-public class InteractableObject : SimpleObject, IMouseInteractable
+public class InteractableObject : GameObject, IMouseInteractable
 {
-	public InteractableObject(ISprite sprite, Camera camera) : base(sprite, camera) {}
+	public InteractableObject(Vector2D position, ISprite sprite, Camera camera) : base(position, sprite, camera) {}
 
 	public bool WasMouseoverHandled { get; set; } = false;
 
 	public bool IsMouseOver(Vector2D mousePosition)
 	{
+		if (!Enabled || Sprite == null || Camera == null)
+			return false;
 		Vector2D screenPosition = Camera.GetScreenPosition(Position);
-		return Enabled &&
-			   mousePosition.X >= screenPosition.X &&
+		return mousePosition.X >= screenPosition.X &&
 			   mousePosition.X <= screenPosition.X + Sprite.GetWidth() * Camera.Scale &&
 			   mousePosition.Y >= screenPosition.Y &&
 			   mousePosition.Y <= screenPosition.Y + Sprite.GetHeight() * Camera.Scale;

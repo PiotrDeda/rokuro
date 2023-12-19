@@ -3,18 +3,19 @@ using Rokuro.MathUtils;
 
 namespace Rokuro.Objects;
 
-public class TextObject : SimpleObject
+public class TextObject : GameObject
 {
 	Color _color;
 	Font _font;
 	string _text;
 
-	public TextObject(Camera camera, string text, Color color, Font font) : base(new TextSprite(), camera)
+	public TextObject(Vector2D position, Camera camera, string text, Color color, Font font)
+		: base(position, new TextSprite(), camera)
 	{
 		_text = text;
 		_color = color;
 		_font = font;
-		Sprite.RefreshTexture(Text, Font, Color, Camera.Drawer.Renderer);
+		Sprite?.RefreshTexture(Text, Font, Color, Camera?.Drawer.Renderer);
 	}
 
 	public string Text
@@ -23,7 +24,7 @@ public class TextObject : SimpleObject
 		set
 		{
 			_text = value;
-			Sprite.RefreshTexture(_text, Font, Color, Camera.Drawer.Renderer);
+			Sprite?.RefreshTexture(_text, Font, Color, Camera?.Drawer.Renderer);
 		}
 	}
 
@@ -33,7 +34,7 @@ public class TextObject : SimpleObject
 		set
 		{
 			_color = value;
-			Sprite.RefreshTexture(Text, Font, _color, Camera.Drawer.Renderer);
+			Sprite?.RefreshTexture(Text, Font, _color, Camera?.Drawer.Renderer);
 		}
 	}
 
@@ -43,9 +44,9 @@ public class TextObject : SimpleObject
 		set
 		{
 			_font = value;
-			Sprite.RefreshTexture(Text, _font, Color, Camera.Drawer.Renderer);
+			Sprite?.RefreshTexture(Text, _font, Color, Camera?.Drawer.Renderer);
 		}
 	}
 
-	public new TextSprite Sprite => (TextSprite)base.Sprite;
+	public new TextSprite? Sprite => (TextSprite?)base.Sprite;
 }

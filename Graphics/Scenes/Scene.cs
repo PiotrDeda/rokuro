@@ -8,13 +8,12 @@ public class Scene
 {
 	public string Name { get; protected set; } = "Scene";
 
-	protected List<IDrawable> Drawables { get; } = new();
+	protected List<GameObject> Drawables { get; } = new();
 	protected List<IMouseInteractable> MouseInteractables { get; } = new();
 
-	public void RegisterGameObject(BaseObject gameObject)
+	public void RegisterGameObject(GameObject gameObject)
 	{
-		if (gameObject is IDrawable drawable)
-			Drawables.Add(drawable);
+		Drawables.Add(gameObject);
 		if (gameObject is IMouseInteractable interactable)
 			MouseInteractables.Add(interactable);
 	}
@@ -24,7 +23,7 @@ public class Scene
 
 	public virtual void DoRender()
 	{
-		foreach (IDrawable drawable in Drawables)
+		foreach (GameObject drawable in Drawables)
 			drawable.Draw();
 	}
 

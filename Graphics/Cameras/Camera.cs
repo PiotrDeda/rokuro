@@ -1,4 +1,5 @@
 using Rokuro.Core;
+using Rokuro.Dtos;
 using Rokuro.MathUtils;
 
 namespace Rokuro.Graphics;
@@ -7,12 +8,14 @@ public class Camera
 {
 	Vector2D _position = new(0, 0);
 
-	public Camera(Drawer drawer, WindowData windowData)
+	public Camera(string name, Drawer drawer, WindowData windowData)
 	{
+		Name = name;
 		Drawer = drawer;
 		WindowData = windowData;
 	}
 
+	public string Name { get; protected set; }
 	public virtual float Scale => Scales[SelectedScale];
 
 	public Vector2D Position
@@ -54,4 +57,12 @@ public class Camera
 	}
 
 	public void ResetZoom() => SelectedScale = 2;
+	
+	internal static Camera FromDto(CameraDto cameraDto, Drawer drawer, WindowData windowData)
+	{
+		Type type = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).SelectMany(a => a.GetTypes())
+			.FirstOrDefault(t => t.FullName != null && t.FullName.Equals(cameraDto.Class))!;
+		var camera = (Camera)Activator.CreateInstance(type, cameraDto.Name, drawer, windowData)!;
+		return camera;
+	}
 }

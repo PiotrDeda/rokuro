@@ -1,3 +1,5 @@
+using Rokuro.Core;
+using Rokuro.Dtos;
 using Rokuro.Inputs;
 using Rokuro.MathUtils;
 using Rokuro.Objects;
@@ -10,12 +12,31 @@ public class Scene
 
 	protected List<GameObject> Drawables { get; } = new();
 	protected List<IMouseInteractable> MouseInteractables { get; } = new();
+	protected List<Camera> Cameras { get; } = new();
 
 	public void RegisterGameObject(GameObject gameObject)
 	{
 		Drawables.Add(gameObject);
 		if (gameObject is IMouseInteractable interactable)
 			MouseInteractables.Add(interactable);
+	}
+	
+	public void RegisterCamera(Camera camera)
+	{
+		Cameras.Add(camera);
+	}
+	
+	public Camera GetCamera(string name)
+	{
+		try
+		{
+			return Cameras.First(camera => camera.Name.Equals(name));
+		}
+		catch (InvalidOperationException)
+		{
+			Logger.ThrowError($"Camera \"{name}\" not found");
+			return null!;
+		}
 	}
 
 	public virtual void OnEnter() {}
@@ -49,5 +70,14 @@ public class Scene
 		foreach (IMouseInteractable interactable in MouseInteractables)
 			if (interactable.IsMouseOver(mousePosition))
 				interactable.OnClick();
+	}
+	
+	internal static Scene FromDto(SceneDto sceneDto, SpriteManager spriteManager, Drawer drawer, WindowData windowData)
+	{
+		Scene scene = new();
+		scene.Name = sceneDto.Name;
+		sceneDto.Cameras.ForEach(cameraDto => scene.RegisterCamera(Camera.FromDto(cameraDto, drawer, windowData)));
+		sceneDto.GameObjects.ForEach(objectDto => scene.RegisterGameObject(GameObject.FromDto(objectDto, scene.GetCamera(objectDto.Camera), spriteManager)));
+		return scene;
 	}
 }

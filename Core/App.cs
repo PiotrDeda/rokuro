@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+using Rokuro.Dtos;
 using Rokuro.Graphics;
 using Rokuro.Inputs;
 using Rokuro.MathUtils;
@@ -43,6 +45,11 @@ public abstract class App : IQuittable
 	public void Run()
 	{
 		Init();
+
+		SceneManager.LoadScenes(Directory.GetFiles("assets/autogen/data/scenes", "*.json")
+			.Select(path => JsonConvert.DeserializeObject<SceneDto>(File.ReadAllText(path))!)
+			.Select(sceneDto => Scene.FromDto(sceneDto, SpriteManager, Drawer, WindowData))
+			.ToList());
 
 		while (Running)
 		{

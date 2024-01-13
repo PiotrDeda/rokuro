@@ -25,7 +25,7 @@ public class GameObject
 		if (Enabled && Sprite != null && Camera != null)
 			Camera.Draw(Sprite, Position);
 	}
-	
+
 	public static GameObject FromDto(GameObjectDto dto, Camera camera, SpriteManager spriteManager)
 	{
 		Type type = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).SelectMany(a => a.GetTypes())

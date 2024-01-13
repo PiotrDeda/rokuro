@@ -1,4 +1,4 @@
-using Rokuro.Core;
+using Rokuro.Graphics;
 using Rokuro.MathUtils;
 using SDL2;
 using static SDL2.SDL.SDL_EventType;
@@ -7,12 +7,12 @@ namespace Rokuro.Inputs;
 
 public class Input
 {
-	public Input(WindowData windowData)
+	public Input(Drawer drawer)
 	{
-		WindowData = windowData;
+		Drawer = drawer;
 	}
 
-	WindowData WindowData { get; }
+	Drawer Drawer { get; }
 	Dictionary<Keycode, KeyEvent> KeyEvents { get; } = new();
 
 	public void SetKeyEvent(Keycode key, KeyEvent keyEvent)
@@ -30,8 +30,8 @@ public class Input
 	public Vector2D GetMousePosition()
 	{
 		SDL.SDL_GetMouseState(out int x, out int y);
-		return new((int)((x - WindowData.WidthOffset) * WindowData.WidthMultiplier),
-			(int)((y - WindowData.HeightOffset) * WindowData.HeightMultiplier));
+		return new((int)((x - Drawer.WidthOffset) * Drawer.WidthMultiplier),
+			(int)((y - Drawer.HeightOffset) * Drawer.HeightMultiplier));
 	}
 
 	internal IInputEvent GetInputEvent(SDL.SDL_Event e) => e.type switch {

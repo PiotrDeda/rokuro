@@ -6,16 +6,23 @@ namespace Rokuro.Graphics;
 
 public class Drawer
 {
-	internal Drawer(IntPtr renderer, WindowData windowData, Color bgColor)
+	internal Drawer(IntPtr renderer, int baseWidth, int baseHeight, Color bgColor)
 	{
 		Renderer = renderer;
-		WindowData = windowData;
+		BaseWidth = baseWidth;
+		BaseHeight = baseHeight;
 		BgColor = bgColor;
 	}
 
+	public int BaseWidth { get; internal set; }
+	public int BaseHeight { get; internal set; }
+	public float WidthMultiplier { get; internal set; } = 1;
+	public float HeightMultiplier { get; internal set; } = 1;
+	public int WidthOffset { get; internal set; }
+	public int HeightOffset { get; internal set; }
+
 	internal IntPtr Renderer { get; }
 
-	WindowData WindowData { get; }
 	Color BgColor { get; }
 
 	public void Draw(ISprite sprite, Vector2D position, float scale)
@@ -35,7 +42,7 @@ public class Drawer
 		SDL.SDL_RenderClear(Renderer);
 
 		SDL.SDL_SetRenderDrawColor(Renderer, BgColor.R, BgColor.G, BgColor.B, BgColor.A);
-		SDL.SDL_Rect rect = SDLExt.Rect(0, 0, WindowData.BaseWidth, WindowData.BaseHeight);
+		SDL.SDL_Rect rect = SDLExt.Rect(0, 0, BaseWidth, BaseHeight);
 		SDL.SDL_RenderFillRect(Renderer, ref rect);
 	}
 

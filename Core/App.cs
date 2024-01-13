@@ -16,15 +16,12 @@ public abstract class App : IQuittable
 	public App(AppProperties properties)
 	{
 		InitSDL();
-		WindowData.BaseWidth = properties.WindowWidth;
-		WindowData.BaseHeight = properties.WindowHeight;
 		(Window, IntPtr renderer) = MakeWindowRenderer(properties);
 		SpriteManager = new(renderer);
-		Input = new(WindowData);
-		Drawer = new(renderer, WindowData, properties.BackgroundColor);
+		Drawer = new(renderer, properties.WindowWidth, properties.WindowHeight, properties.BackgroundColor);
+		Input = new(Drawer);
 	}
 
-	protected WindowData WindowData { get; } = new();
 	protected SpriteManager SpriteManager { get; }
 	protected SceneManager SceneManager { get; } = new();
 	protected Input Input { get; }
@@ -48,7 +45,7 @@ public abstract class App : IQuittable
 
 		SceneManager.LoadScenes(Directory.GetFiles("assets/autogen/data/scenes", "*.json")
 			.Select(path => JsonConvert.DeserializeObject<SceneDto>(File.ReadAllText(path))!)
-			.Select(sceneDto => Scene.FromDto(sceneDto, SpriteManager, Drawer, WindowData))
+			.Select(sceneDto => Scene.FromDto(sceneDto, SpriteManager, Drawer))
 			.ToList());
 
 		while (Running)
@@ -113,7 +110,7 @@ public abstract class App : IQuittable
 	(IntPtr, IntPtr) MakeWindowRenderer(AppProperties properties)
 	{
 		IntPtr window = SDL.SDL_CreateWindow(properties.Name, SDL.SDL_WINDOWPOS_UNDEFINED, SDL.SDL_WINDOWPOS_UNDEFINED,
-			WindowData.BaseWidth, WindowData.BaseHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+			properties.WindowWidth, properties.WindowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 		if (window == IntPtr.Zero)
 			Logger.ThrowSDLError("Window could not be created!", ErrorSource.SDL);
 
@@ -122,7 +119,7 @@ public abstract class App : IQuittable
 		if (renderer == IntPtr.Zero)
 			Logger.ThrowSDLError("Renderer could not be created!", ErrorSource.SDL);
 		SDL.SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
-		SDL.SDL_RenderSetLogicalSize(renderer, WindowData.BaseWidth, WindowData.BaseHeight);
+		SDL.SDL_RenderSetLogicalSize(renderer, properties.WindowWidth, properties.WindowHeight);
 
 		return (window, renderer);
 	}
@@ -133,29 +130,29 @@ public abstract class App : IQuittable
 
 		SDL.SDL_GetWindowSize(Window, out int w, out int h);
 		(float width, float height) = (w, h);
-		(float baseWidth, float baseHeight) = (WindowData.BaseWidth, WindowData.BaseHeight);
+		(float baseWidth, float baseHeight) = (Drawer.BaseWidth, Drawer.BaseHeight);
 
 		if (width / height > baseWidth / baseHeight)
 		{
 			float newW = height * baseWidth / baseHeight;
-			WindowData.WidthOffset = (int)(width - newW) / 2;
-			WindowData.HeightOffset = 0;
+			Drawer.WidthOffset = (int)(width - newW) / 2;
+			Drawer.HeightOffset = 0;
 			width = newW;
 		}
 		else if (width / height < baseWidth / baseHeight)
 		{
 			float newH = width * baseHeight / baseWidth;
-			WindowData.WidthOffset = 0;
-			WindowData.HeightOffset = (int)(height - newH) / 2;
+			Drawer.WidthOffset = 0;
+			Drawer.HeightOffset = (int)(height - newH) / 2;
 			height = newH;
 		}
 		else
 		{
-			WindowData.WidthOffset = 0;
-			WindowData.HeightOffset = 0;
+			Drawer.WidthOffset = 0;
+			Drawer.HeightOffset = 0;
 		}
 
-		WindowData.WidthMultiplier = baseWidth / width;
-		WindowData.HeightMultiplier = baseHeight / height;
+		Drawer.WidthMultiplier = baseWidth / width;
+		Drawer.HeightMultiplier = baseHeight / height;
 	}
 }

@@ -1,4 +1,3 @@
-using Rokuro.Core;
 using Rokuro.Dtos;
 using Rokuro.MathUtils;
 
@@ -8,11 +7,10 @@ public class Camera
 {
 	Vector2D _position = new(0, 0);
 
-	public Camera(string name, Drawer drawer, WindowData windowData)
+	public Camera(string name, Drawer drawer)
 	{
 		Name = name;
 		Drawer = drawer;
-		WindowData = windowData;
 	}
 
 	public string Name { get; protected set; }
@@ -33,7 +31,6 @@ public class Camera
 
 	internal Drawer Drawer { get; }
 
-	WindowData WindowData { get; }
 	float[] Scales { get; } = { 0.5f, 0.75f, 1.0f, 1.25f, 1.5f };
 	int SelectedScale { get; set; } = 2;
 
@@ -42,7 +39,7 @@ public class Camera
 	public void Draw(ISprite sprite, Vector2D position) => Drawer.Draw(sprite, GetScreenPosition(position), Scale);
 
 	public void CenterOn(Vector2D position) =>
-		Position = position - new Vector2D(WindowData.BaseWidth / 2, WindowData.BaseHeight / 2) / Scale;
+		Position = position - new Vector2D(Drawer.BaseWidth / 2, Drawer.BaseHeight / 2) / Scale;
 
 	public void ZoomIn()
 	{
@@ -57,12 +54,12 @@ public class Camera
 	}
 
 	public void ResetZoom() => SelectedScale = 2;
-	
-	internal static Camera FromDto(CameraDto cameraDto, Drawer drawer, WindowData windowData)
+
+	internal static Camera FromDto(CameraDto cameraDto, Drawer drawer)
 	{
 		Type type = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).SelectMany(a => a.GetTypes())
 			.FirstOrDefault(t => t.FullName != null && t.FullName.Equals(cameraDto.Class))!;
-		var camera = (Camera)Activator.CreateInstance(type, cameraDto.Name, drawer, windowData)!;
+		var camera = (Camera)Activator.CreateInstance(type, cameraDto.Name, drawer)!;
 		return camera;
 	}
 }

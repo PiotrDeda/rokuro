@@ -20,12 +20,12 @@ public class Scene
 		if (gameObject is IMouseInteractable interactable)
 			MouseInteractables.Add(interactable);
 	}
-	
+
 	public void RegisterCamera(Camera camera)
 	{
 		Cameras.Add(camera);
 	}
-	
+
 	public Camera GetCamera(string name)
 	{
 		try
@@ -71,13 +71,14 @@ public class Scene
 			if (interactable.IsMouseOver(mousePosition))
 				interactable.OnClick();
 	}
-	
-	internal static Scene FromDto(SceneDto sceneDto, SpriteManager spriteManager, Drawer drawer, WindowData windowData)
+
+	internal static Scene FromDto(SceneDto sceneDto, SpriteManager spriteManager, Drawer drawer)
 	{
 		Scene scene = new();
 		scene.Name = sceneDto.Name;
-		sceneDto.Cameras.ForEach(cameraDto => scene.RegisterCamera(Camera.FromDto(cameraDto, drawer, windowData)));
-		sceneDto.GameObjects.ForEach(objectDto => scene.RegisterGameObject(GameObject.FromDto(objectDto, scene.GetCamera(objectDto.Camera), spriteManager)));
+		sceneDto.Cameras.ForEach(cameraDto => scene.RegisterCamera(Camera.FromDto(cameraDto, drawer)));
+		sceneDto.GameObjects.ForEach(objectDto =>
+			scene.RegisterGameObject(GameObject.FromDto(objectDto, scene.GetCamera(objectDto.Camera), spriteManager)));
 		return scene;
 	}
 }

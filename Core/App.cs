@@ -43,10 +43,11 @@ public abstract class App : IQuittable
 	{
 		Init();
 
-		SceneManager.LoadScenes(Directory.GetFiles("assets/autogen/data/scenes", "*.json")
-			.Select(path => JsonConvert.DeserializeObject<SceneDto>(File.ReadAllText(path))!)
-			.Select(sceneDto => Scene.FromDto(sceneDto, SpriteManager, Drawer))
-			.ToList());
+		if (Directory.Exists("assets/autogen/data/scenes"))
+			SceneManager.LoadScenes(Directory.GetFiles("assets/autogen/data/scenes", "*.json")
+				.Select(path => JsonConvert.DeserializeObject<SceneDto>(File.ReadAllText(path))!)
+				.Select(sceneDto => Scene.FromDto(sceneDto, SpriteManager, Drawer))
+				.ToList());
 
 		while (Running)
 		{

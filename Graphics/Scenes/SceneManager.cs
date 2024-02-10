@@ -24,7 +24,7 @@ public class SceneManager
 
 	public void LoadScenes(List<Scene> scenes)
 	{
-		Scenes = scenes;
+		Scenes = Scenes.Concat(scenes).ToList();
 		CurrentScene = Scenes[0];
 		NextScene = Scenes[0];
 	}

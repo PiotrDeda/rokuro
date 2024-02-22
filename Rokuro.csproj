@@ -4,6 +4,11 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<Version>0.0.1</Version>
+		<Authors>Piotr Deda</Authors>
+		<Company>Piotr Deda</Company>
+		<PackageDescription>Simple C#/SDL engine for 2D RPG games</PackageDescription>
+		<RepositoryUrl>https://github.com/PiotrDeda/rokuro</RepositoryUrl>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -16,7 +16,7 @@ public class TextSprite : ISprite
 
 	internal void RefreshTexture(string text, Font font, Color color, IntPtr? renderer)
 	{
-		if (renderer == null)
+		if (renderer == null || font.Get() == IntPtr.Zero)
 			return;
 		IntPtr surface = SDL_ttf.TTF_RenderText_Blended_Wrapped(font.Get(), text, color, 2000);
 		if (surface == IntPtr.Zero)

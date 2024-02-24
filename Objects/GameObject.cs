@@ -1,3 +1,4 @@
+using System.Reflection;
 using Rokuro.Dtos;
 using Rokuro.Graphics;
 using Rokuro.MathUtils;
@@ -33,6 +34,13 @@ public class GameObject
 		var o = (GameObject)Activator.CreateInstance(type, new Vector2D(dto.X, dto.Y),
 			spriteManager.CreateSprite<StaticSprite>(dto.Sprite), camera)!;
 		o.Position = new(dto.X, dto.Y);
+		foreach (CustomPropertyDto property in dto.CustomProperties)
+		{
+			PropertyInfo? pi = type.GetProperty(property.Name);
+			pi?.SetValue(o, Convert.ChangeType(property.Value, pi.PropertyType));
+		}
+		if (o is TextObject textObject)
+			textObject.Font = spriteManager.DefaultFont;
 		return o;
 	}
 }

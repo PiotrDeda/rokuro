@@ -8,6 +8,15 @@ public class TextObject : GameObject
 	Color _color;
 	Font _font;
 	string _text;
+	
+	// ReSharper disable once UnusedParameter.Local
+	public TextObject(Vector2D position, ISprite _, Camera camera)
+		: base(position, new TextSprite(), camera)
+	{
+		_text = "";
+		_color = new(255, 255, 255);
+		_font = new(IntPtr.Zero);
+	}
 
 	public TextObject(Vector2D position, Camera camera, string text, Color color, Font font)
 		: base(position, new TextSprite(), camera)

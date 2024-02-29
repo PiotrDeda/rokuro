@@ -1,53 +1,57 @@
-using Rokuro.Core;
 using Rokuro.MathUtils;
-using SDL2;
 
 namespace Rokuro.Graphics;
 
-public class Drawer
+public static class Drawer
 {
-	internal Drawer(IntPtr renderer, int baseWidth, int baseHeight, Color bgColor)
+	public static int BaseWidth
 	{
-		Renderer = renderer;
-		BaseWidth = baseWidth;
-		BaseHeight = baseHeight;
-		BgColor = bgColor;
+		get => DrawerImpl.ActiveImpl.BaseWidth;
+		set => DrawerImpl.ActiveImpl.BaseWidth = value;
 	}
 
-	public int BaseWidth { get; internal set; }
-	public int BaseHeight { get; internal set; }
-	public float WidthMultiplier { get; internal set; } = 1;
-	public float HeightMultiplier { get; internal set; } = 1;
-	public int WidthOffset { get; internal set; }
-	public int HeightOffset { get; internal set; }
-
-	internal IntPtr Renderer { get; }
-
-	Color BgColor { get; }
-
-	public void Draw(ISprite sprite, Vector2D position, float scale)
+	public static int BaseHeight
 	{
-		(IntPtr texture, IntPtr clip) = sprite.GetRenderData();
-		if (texture != IntPtr.Zero)
-		{
-			SDL.SDL_Rect rect = SDLExt.Rect(position.X, position.Y,
-				(int)(sprite.GetWidth() * scale), (int)(sprite.GetHeight() * scale));
-			SDL.SDL_RenderCopy(Renderer, texture, clip, ref rect);
-		}
+		get => DrawerImpl.ActiveImpl.BaseHeight;
+		set => DrawerImpl.ActiveImpl.BaseHeight = value;
 	}
 
-	internal void RenderStart()
+	public static float WidthMultiplier
 	{
-		SDL.SDL_SetRenderDrawColor(Renderer, 0x00, 0x00, 0x00, 0xFF);
-		SDL.SDL_RenderClear(Renderer);
-
-		SDL.SDL_SetRenderDrawColor(Renderer, BgColor.R, BgColor.G, BgColor.B, BgColor.A);
-		SDL.SDL_Rect rect = SDLExt.Rect(0, 0, BaseWidth, BaseHeight);
-		SDL.SDL_RenderFillRect(Renderer, ref rect);
+		get => DrawerImpl.ActiveImpl.WidthMultiplier;
+		set => DrawerImpl.ActiveImpl.WidthMultiplier = value;
 	}
 
-	internal void RenderComplete()
+	public static float HeightMultiplier
 	{
-		SDL.SDL_RenderPresent(Renderer);
+		get => DrawerImpl.ActiveImpl.HeightMultiplier;
+		set => DrawerImpl.ActiveImpl.HeightMultiplier = value;
 	}
+
+	public static int WidthOffset
+	{
+		get => DrawerImpl.ActiveImpl.WidthOffset;
+		set => DrawerImpl.ActiveImpl.WidthOffset = value;
+	}
+
+	public static int HeightOffset
+	{
+		get => DrawerImpl.ActiveImpl.HeightOffset;
+		set => DrawerImpl.ActiveImpl.HeightOffset = value;
+	}
+
+	public static Color BgColor
+	{
+		get => DrawerImpl.ActiveImpl.BgColor;
+		set => DrawerImpl.ActiveImpl.BgColor = value;
+	}
+
+	public static void Draw(ISprite sprite, Vector2D position, float scale) =>
+		DrawerImpl.ActiveImpl.Draw(sprite, position, scale);
+
+	internal static (IntPtr texture, int width, int height) GetTextTexture(string text, Font font, Color color) =>
+		DrawerImpl.ActiveImpl.GetTextTexture(text, font, color);
+
+	internal static void RenderStart() => DrawerImpl.ActiveImpl.RenderStart();
+	internal static void RenderComplete() => DrawerImpl.ActiveImpl.RenderComplete();
 }

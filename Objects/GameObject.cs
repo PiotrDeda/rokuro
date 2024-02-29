@@ -27,12 +27,12 @@ public class GameObject
 			Camera.Draw(Sprite, Position);
 	}
 
-	public static GameObject FromDto(GameObjectDto dto, Camera camera, SpriteManager spriteManager)
+	public static GameObject FromDto(GameObjectDto dto, Camera camera)
 	{
 		Type type = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).SelectMany(a => a.GetTypes())
 			.FirstOrDefault(t => t.FullName != null && t.FullName.Equals(dto.Class))!;
 		var o = (GameObject)Activator.CreateInstance(type, new Vector2D(dto.X, dto.Y),
-			spriteManager.CreateSprite<StaticSprite>(dto.Sprite), camera)!;
+			SpriteManager.CreateSprite<StaticSprite>(dto.Sprite), camera)!;
 		o.Position = new(dto.X, dto.Y);
 		foreach (CustomPropertyDto property in dto.CustomProperties)
 		{
@@ -40,7 +40,7 @@ public class GameObject
 			pi?.SetValue(o, Convert.ChangeType(property.Value, pi.PropertyType));
 		}
 		if (o is TextObject textObject)
-			textObject.Font = spriteManager.DefaultFont;
+			textObject.Font = SpriteManager.DefaultFont;
 		return o;
 	}
 }

@@ -4,7 +4,7 @@ namespace Rokuro.Graphics;
 
 public class UICamera : Camera
 {
-	public UICamera(string name, Drawer drawer) : base(name, drawer) {}
+	public UICamera(string name) : base(name) {}
 
 	public override float Scale => 1.0f;
 

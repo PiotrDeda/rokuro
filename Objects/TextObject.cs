@@ -8,7 +8,7 @@ public class TextObject : GameObject
 	Color _color;
 	Font _font;
 	string _text;
-	
+
 	// ReSharper disable once UnusedParameter.Local
 	public TextObject(Vector2D position, ISprite _, Camera camera)
 		: base(position, new TextSprite(), camera)
@@ -24,7 +24,7 @@ public class TextObject : GameObject
 		_text = text;
 		_color = color;
 		_font = font;
-		Sprite?.RefreshTexture(Text, Font, Color, Camera?.Drawer.Renderer);
+		Sprite?.RefreshTexture(Text, Font, Color);
 	}
 
 	public string Text
@@ -33,7 +33,7 @@ public class TextObject : GameObject
 		set
 		{
 			_text = value;
-			Sprite?.RefreshTexture(_text, Font, Color, Camera?.Drawer.Renderer);
+			Sprite?.RefreshTexture(_text, Font, Color);
 		}
 	}
 
@@ -43,7 +43,7 @@ public class TextObject : GameObject
 		set
 		{
 			_color = value;
-			Sprite?.RefreshTexture(Text, Font, _color, Camera?.Drawer.Renderer);
+			Sprite?.RefreshTexture(Text, Font, _color);
 		}
 	}
 
@@ -53,7 +53,7 @@ public class TextObject : GameObject
 		set
 		{
 			_font = value;
-			Sprite?.RefreshTexture(Text, _font, Color, Camera?.Drawer.Renderer);
+			Sprite?.RefreshTexture(Text, _font, Color);
 		}
 	}
 

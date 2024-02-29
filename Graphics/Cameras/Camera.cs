@@ -7,10 +7,9 @@ public class Camera
 {
 	Vector2D _position = new(0, 0);
 
-	public Camera(string name, Drawer drawer)
+	public Camera(string name)
 	{
 		Name = name;
-		Drawer = drawer;
 	}
 
 	public string Name { get; protected set; }
@@ -28,8 +27,6 @@ public class Camera
 
 	public Vector2D BoundaryMin { get; set; } = new(0, 0);
 	public Vector2D BoundaryMax { get; set; } = new(0, 0);
-
-	internal Drawer Drawer { get; }
 
 	float[] Scales { get; } = { 0.5f, 0.75f, 1.0f, 1.25f, 1.5f };
 	int SelectedScale { get; set; } = 2;
@@ -55,11 +52,11 @@ public class Camera
 
 	public void ResetZoom() => SelectedScale = 2;
 
-	internal static Camera FromDto(CameraDto cameraDto, Drawer drawer)
+	internal static Camera FromDto(CameraDto cameraDto)
 	{
 		Type type = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).SelectMany(a => a.GetTypes())
 			.FirstOrDefault(t => t.FullName != null && t.FullName.Equals(cameraDto.Class))!;
-		var camera = (Camera)Activator.CreateInstance(type, cameraDto.Name, drawer)!;
+		var camera = (Camera)Activator.CreateInstance(type, cameraDto.Name)!;
 		return camera;
 	}
 }

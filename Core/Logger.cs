@@ -4,23 +4,10 @@ namespace Rokuro.Core;
 
 public static class Logger
 {
-	public static void LogInfo(string message)
-	{
-		SDL.SDL_LogInfo((int)SDL.SDL_LogCategory.SDL_LOG_CATEGORY_APPLICATION, message);
-	}
-
-	public static void LogWarning(string message)
-	{
-		SDL.SDL_LogWarn((int)SDL.SDL_LogCategory.SDL_LOG_CATEGORY_APPLICATION, message);
-	}
-
-	public static void ThrowError(string message)
-	{
-		SDL.SDL_LogCritical((int)SDL.SDL_LogCategory.SDL_LOG_CATEGORY_APPLICATION, message);
-		SDL.SDL_ShowSimpleMessageBox(SDL.SDL_MessageBoxFlags.SDL_MESSAGEBOX_ERROR, "An error has occurred", message,
-			IntPtr.Zero);
-		throw new(message);
-	}
+	public static void LogInfo(string message) => LoggerImpl.ActiveImpl.LogInfo(message);
+	public static void LogWarning(string message) => LoggerImpl.ActiveImpl.LogWarning(message);
+	public static void ThrowError(Exception exception) => LoggerImpl.ActiveImpl.ThrowError(exception);
+	public static void ThrowError(string message) => ThrowError(new Exception(message));
 
 	internal static void ThrowSDLError(string message, ErrorSource source = ErrorSource.None) =>
 		ThrowError(source switch {

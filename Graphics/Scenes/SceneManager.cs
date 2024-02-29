@@ -1,40 +1,11 @@
-using Rokuro.Core;
-
 namespace Rokuro.Graphics;
 
-public class SceneManager
+public static class SceneManager
 {
-	internal Scene CurrentScene { get; private set; } = new();
+	internal static Scene CurrentScene => SceneManagerImpl.ActiveImpl.CurrentScene;
 
-	List<Scene> Scenes { get; set; } = new();
-	Scene NextScene { get; set; } = new();
+	public static void SetNextScene(string sceneName) => SceneManagerImpl.ActiveImpl.SetNextScene(sceneName);
+	public static void LoadScenes(List<Scene> scenes) => SceneManagerImpl.ActiveImpl.LoadScenes(scenes);
 
-	public void SetNextScene(string sceneName)
-	{
-		Logger.LogInfo($"Switching scene from \"{CurrentScene.Name}\" to \"{sceneName}\"");
-		try
-		{
-			NextScene = Scenes.First(scene => scene.Name == sceneName);
-		}
-		catch (InvalidOperationException)
-		{
-			Logger.ThrowError($"Scene \"{sceneName}\" not found");
-		}
-	}
-
-	public void LoadScenes(List<Scene> scenes)
-	{
-		Scenes = Scenes.Concat(scenes).ToList();
-		CurrentScene = Scenes[0];
-		NextScene = Scenes[0];
-	}
-
-	internal void SwitchScenes()
-	{
-		if (CurrentScene != NextScene)
-		{
-			CurrentScene = NextScene;
-			CurrentScene.OnEnter();
-		}
-	}
+	internal static void SwitchScenes() => SceneManagerImpl.ActiveImpl.SwitchScenes();
 }

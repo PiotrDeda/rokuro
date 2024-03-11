@@ -4,7 +4,7 @@ using SDL2;
 
 namespace Rokuro.Graphics;
 
-public class DrawerImpl
+class DrawerImpl
 {
 	public static DrawerImpl ActiveImpl { get; set; } = new();
 

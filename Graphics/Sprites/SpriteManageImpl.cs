@@ -3,7 +3,7 @@ using SDL2;
 
 namespace Rokuro.Graphics;
 
-public class SpriteManageImpl
+class SpriteManageImpl
 {
 	public SpriteManageImpl()
 	{

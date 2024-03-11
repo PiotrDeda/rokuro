@@ -5,7 +5,7 @@ using static SDL2.SDL.SDL_EventType;
 
 namespace Rokuro.Inputs;
 
-public class InputImpl
+class InputImpl
 {
 	public static InputImpl ActiveImpl { get; set; } = new();
 

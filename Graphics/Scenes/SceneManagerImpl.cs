@@ -2,7 +2,7 @@ using Rokuro.Core;
 
 namespace Rokuro.Graphics;
 
-public class SceneManagerImpl
+class SceneManagerImpl
 {
 	public static SceneManagerImpl ActiveImpl { get; set; } = new();
 

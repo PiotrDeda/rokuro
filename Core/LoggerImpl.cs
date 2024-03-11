@@ -2,7 +2,7 @@ using SDL2;
 
 namespace Rokuro.Core;
 
-public class LoggerImpl
+class LoggerImpl
 {
 	public static LoggerImpl ActiveImpl { get; set; } = new();
 

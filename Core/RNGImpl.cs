@@ -1,6 +1,6 @@
 namespace Rokuro.Core;
 
-public class RNGImpl
+class RNGImpl
 {
 	public static RNGImpl ActiveImpl { get; set; } = new();
 

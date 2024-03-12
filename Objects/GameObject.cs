@@ -9,7 +9,7 @@ public class GameObject
 {
 	public GameObject() {}
 
-	public GameObject(Vector2D position, ISprite sprite, Camera camera)
+	public GameObject(Vector2D position, Sprite sprite, Camera camera)
 	{
 		Position = position;
 		Sprite = sprite;
@@ -18,7 +18,7 @@ public class GameObject
 
 	public bool Enabled { get; set; } = true;
 	public Vector2D Position { get; set; }
-	public ISprite? Sprite { get; set; }
+	public Sprite? Sprite { get; set; }
 	public Camera? Camera { get; set; }
 
 	public virtual void Draw()
@@ -29,18 +29,21 @@ public class GameObject
 
 	public static GameObject FromDto(GameObjectDto dto, Camera camera)
 	{
-		Type type = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).SelectMany(a => a.GetTypes())
+		Type objectType = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).SelectMany(a => a.GetTypes())
 			.FirstOrDefault(t => t.FullName != null && t.FullName.Equals(dto.Class))!;
-		var o = (GameObject)Activator.CreateInstance(type, new Vector2D(dto.X, dto.Y),
-			SpriteManager.CreateSprite<StaticSprite>(dto.Sprite), camera)!;
-		o.Position = new(dto.X, dto.Y);
+		Type spriteType = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).SelectMany(a => a.GetTypes())
+			.FirstOrDefault(t => t.FullName != null && t.FullName.Equals(dto.SpriteType))!;
+		GameObject? o;
+		if (objectType == typeof(TextObject) || spriteType == typeof(TextSprite))
+			o = new TextObject(new(dto.X, dto.Y), camera, dto.Sprite, new(255, 255, 255), SpriteManager.DefaultFont);
+		else
+			o = (GameObject)Activator.CreateInstance(objectType, new Vector2D(dto.X, dto.Y),
+				SpriteManager.CreateSprite(dto.Sprite, spriteType), camera)!;
 		foreach (CustomPropertyDto property in dto.CustomProperties)
 		{
-			PropertyInfo? pi = type.GetProperty(property.Name);
+			PropertyInfo? pi = objectType.GetProperty(property.Name);
 			pi?.SetValue(o, Convert.ChangeType(property.Value, pi.PropertyType));
 		}
-		if (o is TextObject textObject)
-			textObject.Font = SpriteManager.DefaultFont;
 		return o;
 	}
 }

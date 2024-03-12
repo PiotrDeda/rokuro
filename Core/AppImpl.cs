@@ -11,7 +11,7 @@ using static SDL2.SDL.SDL_WindowFlags;
 
 namespace Rokuro.Core;
 
-public class AppImpl
+class AppImpl
 {
 	IntPtr _renderer = IntPtr.Zero;
 
@@ -55,17 +55,20 @@ public class AppImpl
 		Drawer.BaseWidth = properties.WindowWidth;
 		Drawer.BaseHeight = properties.WindowHeight;
 		Drawer.BgColor = properties.BackgroundColor;
-		WasSetup = true;
-	}
 
-	public virtual void Run()
-	{
+		SpriteManager.LoadTextures();
+
 		if (Directory.Exists("assets/autogen/data/scenes"))
 			SceneManager.LoadScenes(Directory.GetFiles("assets/autogen/data/scenes", "*.json")
 				.Select(path => JsonConvert.DeserializeObject<SceneDto>(File.ReadAllText(path))!)
 				.Select(sceneDto => Scene.FromDto(sceneDto))
 				.ToList());
 
+		WasSetup = true;
+	}
+
+	public virtual void Run()
+	{
 		while (Running)
 		{
 			while (SDL.SDL_PollEvent(out SDL.SDL_Event e) != 0)

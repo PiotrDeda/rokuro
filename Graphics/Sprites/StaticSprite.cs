@@ -1,13 +1,10 @@
 namespace Rokuro.Graphics;
 
-public class StaticSprite : ISprite
+public class StaticSprite : Sprite
 {
 	int _state;
 
-	public StaticSprite(SpriteTemplate template)
-	{
-		Template = template;
-	}
+	public StaticSprite(Texture texture) : base(texture) {}
 
 	public int State
 	{
@@ -16,17 +13,12 @@ public class StaticSprite : ISprite
 		{
 			if (value < 0)
 				_state = 0;
-			else if (value >= Template.Clips.Length)
-				_state = Template.Clips.Length - 1;
+			else if (value >= Texture.Clips.Length)
+				_state = Texture.Clips.Length - 1;
 			else
 				_state = value;
 		}
 	}
 
-	SpriteTemplate Template { get; }
-
-	public int GetWidth() => Template.Width;
-	public int GetHeight() => Template.Height;
-
-	public (IntPtr texture, IntPtr clip) GetRenderData() => (Template.Texture, Template.Clips[State]);
+	internal override IntPtr GetClip() => Texture.Clips[State];
 }

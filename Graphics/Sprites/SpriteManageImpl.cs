@@ -1,5 +1,9 @@
+using System.Runtime.InteropServices;
+using JetBrains.Annotations;
 using Rokuro.Core;
 using SDL2;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace Rokuro.Graphics;
 
@@ -8,37 +12,79 @@ class SpriteManageImpl
 	public SpriteManageImpl()
 	{
 		DefaultFont = LoadDefaultFont();
+		IntPtr rectObj = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(SDL.SDL_Rect)));
+		Marshal.StructureToPtr(SDLExt.Rect(0, 0, 0, 0), rectObj, false);
+		BlankRect = rectObj;
 	}
 
 	public static SpriteManageImpl ActiveImpl { get; set; } = new();
 
 	public Font DefaultFont { get; private set; }
 
-	IntPtr Renderer { get; } = App.Renderer;
-	Dictionary<string, SpriteTemplate> SpriteTemplates { get; set; } = new();
+	internal IntPtr BlankRect { get; }
 
-	public virtual T CreateSprite<T>(string name) where T : ISprite
+	IntPtr Renderer { get; } = App.Renderer;
+	Dictionary<string, Texture> Textures { get; } = new();
+
+	public virtual T CreateSprite<T>(string name) where T : Sprite
 	{
-		if (SpriteTemplates.TryGetValue(name, out SpriteTemplate? template))
-			return (T)Activator.CreateInstance(typeof(T), template)!;
+		if (Textures.TryGetValue(name, out Texture? texture))
+			return (T)Activator.CreateInstance(typeof(T), texture)!;
 
 		Logger.ThrowError($"Sprite {name} not found!");
 		throw new();
 	}
 
-	public virtual void LoadSpriteTemplates(Dictionary<string, SpriteTemplate> sprites)
+	public virtual Sprite CreateSprite(string name, Type type)
 	{
-		SpriteTemplates = sprites;
+		if (Textures.TryGetValue(name, out Texture? texture))
+			return (Sprite)Activator.CreateInstance(type, texture)!;
+
+		Logger.ThrowError($"Sprite {name} not found!");
+		throw new();
 	}
 
-	public virtual Texture LoadTexture(string filename) =>
-		new(SDL_image.IMG_LoadTexture(Renderer, $"assets/textures/{filename}.png"));
+	internal virtual void LoadTextures()
+	{
+		string[] files = Directory.GetFiles(Path.Combine("assets", "textures"), "*.png", SearchOption.AllDirectories);
+		foreach (string file in files)
+			AddTexture(file.Split(Path.DirectorySeparatorChar).Skip(2).Aggregate((a, b) => Path.Combine(a, b)));
+	}
+
+	void AddTexture(string filename)
+	{
+		TextureConfigModel textureConfig = new();
+		string configFilename = Path.Combine("assets", "textures", filename.Replace(".png", ".yaml"));
+		if (File.Exists(configFilename))
+			try
+			{
+				textureConfig = new DeserializerBuilder()
+					.WithNamingConvention(UnderscoredNamingConvention.Instance)
+					.Build()
+					.Deserialize<TextureConfigModel>(File.ReadAllText(configFilename));
+			}
+			catch (Exception e)
+			{
+				Logger.ThrowError($"Couldn't load texture: {e.Message}");
+				return;
+			}
+		Textures.Add(filename.Replace(".png", "").Replace('\\', '/'),
+			new(SDL_image.IMG_LoadTexture(Renderer, Path.Combine("assets", "textures", filename)),
+				textureConfig.States, textureConfig.Frames, textureConfig.Delay));
+	}
 
 	Font LoadDefaultFont()
 	{
-		IntPtr font = SDL_ttf.TTF_OpenFont("assets_engine/CascadiaMono.ttf", 20);
+		IntPtr font = SDL_ttf.TTF_OpenFont(Path.Combine("assets_engine", "CascadiaMono.ttf"), 20);
 		if (font == IntPtr.Zero)
 			Logger.ThrowSDLError("Failed to load font", ErrorSource.TTF);
 		return new(font);
+	}
+
+	class TextureConfigModel
+	{
+		[UsedImplicitly] public int States { get; set; } = 1;
+		[UsedImplicitly] public int Frames { get; set; } = 1;
+		[UsedImplicitly] public int Delay { get; set; } = 30;
 	}
 }

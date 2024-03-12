@@ -24,12 +24,7 @@ class SceneManagerImpl
 		}
 	}
 
-	public virtual void LoadScenes(List<Scene> scenes)
-	{
-		Scenes = Scenes.Concat(scenes).ToList();
-		CurrentScene = Scenes[0];
-		NextScene = Scenes[0];
-	}
+	public virtual void LoadScenes(List<Scene> scenes) => Scenes = Scenes.Concat(scenes).ToList();
 
 	internal virtual void SwitchScenes()
 	{

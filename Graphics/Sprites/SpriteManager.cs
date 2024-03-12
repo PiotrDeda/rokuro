@@ -4,10 +4,10 @@ public static class SpriteManager
 {
 	public static Font DefaultFont => SpriteManageImpl.ActiveImpl.DefaultFont;
 
-	public static T CreateSprite<T>(string name) where T : ISprite => SpriteManageImpl.ActiveImpl.CreateSprite<T>(name);
+	internal static IntPtr BlankRect => SpriteManageImpl.ActiveImpl.BlankRect;
 
-	public static void LoadSpriteTemplates(Dictionary<string, SpriteTemplate> sprites) =>
-		SpriteManageImpl.ActiveImpl.LoadSpriteTemplates(sprites);
+	public static T CreateSprite<T>(string name) where T : Sprite => SpriteManageImpl.ActiveImpl.CreateSprite<T>(name);
+	public static Sprite CreateSprite(string name, Type type) => SpriteManageImpl.ActiveImpl.CreateSprite(name, type);
 
-	public static Texture LoadTexture(string filename) => SpriteManageImpl.ActiveImpl.LoadTexture(filename);
+	internal static void LoadTextures() => SpriteManageImpl.ActiveImpl.LoadTextures();
 }

@@ -2,19 +2,15 @@ using Rokuro.MathUtils;
 
 namespace Rokuro.Graphics;
 
-public class TextSprite : ISprite
+public class TextSprite : Sprite
 {
-	IntPtr Texture { get; set; }
-	int Width { get; set; }
-	int Height { get; set; }
+	public TextSprite() : base(new()) {}
 
-	int ISprite.GetWidth() => Width;
-	int ISprite.GetHeight() => Height;
-	public (IntPtr texture, IntPtr clip) GetRenderData() => (Texture, IntPtr.Zero);
+	internal override IntPtr GetClip() => IntPtr.Zero;
 
-	internal void RefreshTexture(string text, Font font, Color color)
+	internal void RefreshRawTexture(string text, Font font, Color color)
 	{
 		if (font.Get() != IntPtr.Zero)
-			(Texture, Width, Height) = Drawer.GetTextTexture(text, font, color);
+			Texture.RawTexture = Drawer.GetTextRawTexture(text, font, color);
 	}
 }

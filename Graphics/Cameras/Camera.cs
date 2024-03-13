@@ -1,3 +1,4 @@
+using System.Reflection;
 using Rokuro.Dtos;
 using Rokuro.MathUtils;
 
@@ -52,11 +53,16 @@ public class Camera
 
 	public void ResetZoom() => SelectedScale = 2;
 
-	internal static Camera FromDto(CameraDto cameraDto)
+	internal static Camera FromDto(CameraDto dto)
 	{
 		Type type = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).SelectMany(a => a.GetTypes())
-			.FirstOrDefault(t => t.FullName != null && t.FullName.Equals(cameraDto.Class))!;
-		var camera = (Camera)Activator.CreateInstance(type, cameraDto.Name)!;
+			.FirstOrDefault(t => t.FullName != null && t.FullName.Equals(dto.Class))!;
+		var camera = (Camera)Activator.CreateInstance(type, dto.Name)!;
+		foreach (CustomPropertyDto property in dto.CustomProperties)
+		{
+			PropertyInfo? pi = type.GetProperty(property.Name);
+			pi?.SetValue(camera, Convert.ChangeType(property.Value, pi.PropertyType));
+		}
 		return camera;
 	}
 }

@@ -33,17 +33,18 @@ public class GameObject
 			.FirstOrDefault(t => t.FullName != null && t.FullName.Equals(dto.Class))!;
 		Type spriteType = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).SelectMany(a => a.GetTypes())
 			.FirstOrDefault(t => t.FullName != null && t.FullName.Equals(dto.SpriteType))!;
-		GameObject? o;
+		GameObject? gameObject;
 		if (objectType == typeof(TextObject) || spriteType == typeof(TextSprite))
-			o = new TextObject(new(dto.X, dto.Y), camera, dto.Sprite, new(255, 255, 255), SpriteManager.DefaultFont);
+			gameObject = new TextObject(new(dto.X, dto.Y), camera, dto.Sprite, new(255, 255, 255),
+				SpriteManager.DefaultFont);
 		else
-			o = (GameObject)Activator.CreateInstance(objectType, new Vector2D(dto.X, dto.Y),
+			gameObject = (GameObject)Activator.CreateInstance(objectType, new Vector2D(dto.X, dto.Y),
 				SpriteManager.CreateSprite(dto.Sprite, spriteType), camera)!;
-		foreach (CustomPropertyDto property in dto.CustomProperties)
+		foreach (CustomPropertyDto propertyDto in dto.CustomProperties)
 		{
-			PropertyInfo? pi = objectType.GetProperty(property.Name);
-			pi?.SetValue(o, Convert.ChangeType(property.Value, pi.PropertyType));
+			PropertyInfo? pi = objectType.GetProperty(propertyDto.Name);
+			pi?.SetValue(gameObject, Convert.ChangeType(propertyDto.Value, pi.PropertyType));
 		}
-		return o;
+		return gameObject;
 	}
 }

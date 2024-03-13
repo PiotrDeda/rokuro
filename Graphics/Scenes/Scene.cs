@@ -72,12 +72,12 @@ public class Scene
 				interactable.OnClick();
 	}
 
-	internal static Scene FromDto(SceneDto sceneDto)
+	internal static Scene FromDto(SceneDto dto)
 	{
 		Scene scene = new();
-		scene.Name = sceneDto.Name;
-		sceneDto.Cameras.ForEach(cameraDto => scene.RegisterCamera(Camera.FromDto(cameraDto)));
-		sceneDto.GameObjects.ForEach(objectDto =>
+		scene.Name = dto.Name;
+		dto.Cameras.ForEach(cameraDto => scene.RegisterCamera(Camera.FromDto(cameraDto)));
+		dto.GameObjects.ForEach(objectDto =>
 			scene.RegisterGameObject(GameObject.FromDto(objectDto, scene.GetCamera(objectDto.Camera))));
 		return scene;
 	}

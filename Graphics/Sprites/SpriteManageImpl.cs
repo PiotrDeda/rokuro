@@ -13,7 +13,7 @@ class SpriteManageImpl
 	{
 		DefaultFont = LoadDefaultFont();
 		IntPtr rectObj = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(SDL.SDL_Rect)));
-		Marshal.StructureToPtr(SDLExt.Rect(0, 0, 0, 0), rectObj, false);
+		Marshal.StructureToPtr(new SDL.SDL_Rect { x = 0, y = 0, w = 0, h = 0 }, rectObj, false);
 		BlankRect = rectObj;
 	}
 

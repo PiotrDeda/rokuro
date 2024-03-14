@@ -23,9 +23,34 @@ class DrawerImpl
 		IntPtr rawTexture = sprite.Texture.RawTexture;
 		if (rawTexture != IntPtr.Zero)
 		{
-			SDL.SDL_Rect rect = SDLExt.Rect(position.X, position.Y,
-				(int)(sprite.Texture.Width * scale), (int)(sprite.Texture.Height * scale));
-			SDL.SDL_RenderCopy(Renderer, rawTexture, sprite.GetClip(), ref rect);
+			SDL.SDL_Rect rect = new() {
+				x = position.X, y = position.Y,
+				w = (int)(sprite.Texture.Width * scale * sprite.ScaleX),
+				h = (int)(sprite.Texture.Height * scale * sprite.ScaleY)
+			};
+			if (sprite.FlipX || sprite.FlipY || sprite.Rotation != 0)
+			{
+				var flip = SDL.SDL_RendererFlip.SDL_FLIP_NONE;
+				if (sprite.FlipX)
+					flip |= SDL.SDL_RendererFlip.SDL_FLIP_HORIZONTAL;
+				if (sprite.FlipY)
+					flip |= SDL.SDL_RendererFlip.SDL_FLIP_VERTICAL;
+				if (sprite.Origin is null)
+				{
+					SDL.SDL_RenderCopyEx(Renderer, rawTexture, sprite.GetClip(), ref rect, sprite.Rotation, IntPtr.Zero,
+						flip);
+				}
+				else
+				{
+					SDL.SDL_Point origin = new() { x = sprite.Origin.Value.X, y = sprite.Origin.Value.Y };
+					SDL.SDL_RenderCopyEx(Renderer, rawTexture, sprite.GetClip(), ref rect, sprite.Rotation, ref origin,
+						flip);
+				}
+			}
+			else
+			{
+				SDL.SDL_RenderCopy(Renderer, rawTexture, sprite.GetClip(), ref rect);
+			}
 		}
 	}
 
@@ -48,7 +73,7 @@ class DrawerImpl
 		SDL.SDL_RenderClear(Renderer);
 
 		SDL.SDL_SetRenderDrawColor(Renderer, BgColor.R, BgColor.G, BgColor.B, BgColor.A);
-		SDL.SDL_Rect rect = SDLExt.Rect(0, 0, BaseWidth, BaseHeight);
+		SDL.SDL_Rect rect = new() { x = 0, y = 0, w = BaseWidth, h = BaseHeight };
 		SDL.SDL_RenderFillRect(Renderer, ref rect);
 	}
 

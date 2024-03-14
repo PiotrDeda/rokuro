@@ -1,5 +1,4 @@
 using System.Runtime.InteropServices;
-using Rokuro.Core;
 using SDL2;
 
 namespace Rokuro.Graphics;
@@ -21,7 +20,12 @@ public class Texture
 			for (int j = 0; j < frameCount; j++)
 			{
 				IntPtr obj = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(SDL.SDL_Rect)));
-				Marshal.StructureToPtr(SDLExt.Rect(j * Width, i * Height, Width, Height), obj, false);
+				Marshal.StructureToPtr(new SDL.SDL_Rect {
+					x = j * Width,
+					y = i * Height,
+					w = Width,
+					h = Height
+				}, obj, false);
 				Clips[i * frameCount + j] = obj;
 			}
 		}

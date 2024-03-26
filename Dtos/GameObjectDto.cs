@@ -6,7 +6,12 @@ public record GameObjectDto(
 	string SpriteType,
 	string Sprite,
 	string Camera,
-	int X,
-	int Y,
+	int PositionX,
+	int PositionY,
+	double ScaleX,
+	double ScaleY,
+	double Rotation,
+	bool FlipX,
+	bool FlipY,
 	List<CustomPropertyDto> CustomProperties
 );

@@ -35,11 +35,16 @@ public class GameObject
 			.FirstOrDefault(t => t.FullName != null && t.FullName.Equals(dto.SpriteType))!;
 		GameObject? gameObject;
 		if (objectType == typeof(TextObject) || spriteType == typeof(TextSprite))
-			gameObject = new TextObject(new(dto.X, dto.Y), camera, dto.Sprite, new(255, 255, 255),
+			gameObject = new TextObject(new(dto.PositionX, dto.PositionY), camera, dto.Sprite, new(255, 255, 255),
 				SpriteManager.DefaultFont);
 		else
-			gameObject = (GameObject)Activator.CreateInstance(objectType, new Vector2D(dto.X, dto.Y),
+			gameObject = (GameObject)Activator.CreateInstance(objectType, new Vector2D(dto.PositionX, dto.PositionY),
 				SpriteManager.CreateSprite(dto.Sprite, spriteType), camera)!;
+		gameObject.Sprite!.ScaleX = dto.ScaleX;
+		gameObject.Sprite.ScaleY = dto.ScaleY;
+		gameObject.Sprite.Rotation = dto.Rotation;
+		gameObject.Sprite.FlipX = dto.FlipX;
+		gameObject.Sprite.FlipY = dto.FlipY;
 		foreach (CustomPropertyDto propertyDto in dto.CustomProperties)
 		{
 			PropertyInfo? pi = objectType.GetProperty(propertyDto.Name);

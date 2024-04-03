@@ -46,9 +46,12 @@ class SpriteManageImpl
 
 	internal virtual void LoadTextures()
 	{
-		string[] files = Directory.GetFiles(Path.Combine("assets", "textures"), "*.png", SearchOption.AllDirectories);
-		foreach (string file in files)
-			AddTexture(file.Split(Path.DirectorySeparatorChar).Skip(2).Aggregate((a, b) => Path.Combine(a, b)));
+		if (Directory.Exists(Path.Combine("assets", "textures")))
+		{
+			string[] files = Directory.GetFiles(Path.Combine("assets", "textures"), "*.png", SearchOption.AllDirectories);
+			foreach (string file in files)
+				AddTexture(file.Split(Path.DirectorySeparatorChar).Skip(2).Aggregate((a, b) => Path.Combine(a, b)));
+		}
 	}
 
 	void AddTexture(string filename)

@@ -31,7 +31,7 @@ class SpriteManageImpl
 		if (Textures.TryGetValue(name, out Texture? texture))
 			return (T)Activator.CreateInstance(typeof(T), texture)!;
 
-		Logger.ThrowError($"Sprite {name} not found!");
+		Logger.ThrowError($"Sprite {name} not found");
 		throw new();
 	}
 
@@ -40,7 +40,7 @@ class SpriteManageImpl
 		if (Textures.TryGetValue(name, out Texture? texture))
 			return (Sprite)Activator.CreateInstance(type, texture)!;
 
-		Logger.ThrowError($"Sprite {name} not found!");
+		Logger.ThrowError($"Sprite {name} not found");
 		throw new();
 	}
 

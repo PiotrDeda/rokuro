@@ -5,5 +5,6 @@ enum ErrorSource
 	None,
 	SDL,
 	IMG,
-	TTF
+	TTF,
+	Mix
 }

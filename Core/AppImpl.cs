@@ -3,6 +3,7 @@ using Rokuro.Dtos;
 using Rokuro.Graphics;
 using Rokuro.Inputs;
 using Rokuro.MathUtils;
+using Rokuro.Sound;
 using SDL2;
 using static SDL2.SDL.SDL_EventType;
 using static SDL2.SDL.SDL_RendererFlags;
@@ -57,6 +58,7 @@ class AppImpl
 		Drawer.BgColor = properties.BackgroundColor;
 
 		SpriteManager.LoadTextures();
+		SoundManager.LoadSoundsAndMusic();
 
 		if (Directory.Exists("assets/autogen/data/scenes"))
 			SceneManager.LoadScenes(Directory.GetFiles("assets/autogen/data/scenes", "*.json")
@@ -113,14 +115,17 @@ class AppImpl
 	{
 		Logger.LogInfo("Initializing SDL...");
 
-		if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO | SDL.SDL_INIT_TIMER) < 0)
+		if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO | SDL.SDL_INIT_AUDIO | SDL.SDL_INIT_TIMER) != 0)
 			Logger.ThrowSDLError("SDL could not initialize!", ErrorSource.SDL);
 
 		if (SDL_image.IMG_Init(SDL_image.IMG_InitFlags.IMG_INIT_PNG) != (int)SDL_image.IMG_InitFlags.IMG_INIT_PNG)
 			Logger.ThrowSDLError("SDL_image could not initialize!", ErrorSource.IMG);
 
-		if (SDL_ttf.TTF_Init() == -1)
+		if (SDL_ttf.TTF_Init() != 0)
 			Logger.ThrowSDLError("SDL_ttf could not initialize!", ErrorSource.TTF);
+
+		if (SDL_mixer.Mix_OpenAudio(44100, SDL_mixer.MIX_DEFAULT_FORMAT, 2, 2048) != 0)
+			Logger.ThrowSDLError("SDL_mixer could not initialize!", ErrorSource.Mix);
 
 		Logger.LogInfo("SDL initialized");
 	}
@@ -130,6 +135,7 @@ class AppImpl
 		Logger.LogInfo("Shutting down SDL...");
 		WasSetup = false;
 		SDL.SDL_DestroyWindow(Window);
+		SDL_mixer.Mix_Quit();
 		SDL_ttf.TTF_Quit();
 		SDL_image.IMG_Quit();
 		SDL.SDL_Quit();

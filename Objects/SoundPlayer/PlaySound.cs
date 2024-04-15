@@ -7,9 +7,9 @@ namespace Rokuro.Objects.SoundPlayer;
 
 public class PlaySound : InteractableObject
 {
-	public string? SoundName { get; [UsedImplicitly] set; }
-	
 	public PlaySound(Vector2D position, Sprite sprite, Camera camera) : base(position, sprite, camera) {}
+
+	public string? SoundName { get; [UsedImplicitly] set; }
 
 	public override void OnClick()
 	{

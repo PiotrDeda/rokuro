@@ -10,10 +10,10 @@ class SoundManagerImpl
 	Dictionary<string, IntPtr> Sounds { get; } = new();
 	Dictionary<string, IntPtr> Music { get; } = new();
 
-	public void PlaySound(string name)
+	public void PlaySound(string name, int loops)
 	{
 		if (Sounds.TryGetValue(name, out IntPtr sound))
-			SDL_mixer.Mix_PlayChannel(-1, sound, 0);
+			SDL_mixer.Mix_PlayChannel(-1, sound, loops);
 		else
 			Logger.ThrowError($"Sound {name} not found");
 	}

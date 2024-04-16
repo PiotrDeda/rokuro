@@ -93,7 +93,7 @@ class AppImpl
 						break;
 				}
 
-				SceneManager.CurrentScene.HandleEvent(Input.GetInputEvent(e));
+				SceneManager.CurrentScene.DoEvents(Input.GetInputEvent(e));
 			}
 
 			Drawer.RenderStart();

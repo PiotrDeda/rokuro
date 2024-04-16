@@ -12,6 +12,7 @@ public class Scene
 
 	protected List<GameObject> Drawables { get; } = new();
 	protected List<IMouseInteractable> MouseInteractables { get; } = new();
+	protected List<IEventReceiver> EventReceivers { get; } = new();
 	protected List<Camera> Cameras { get; } = new();
 
 	public void RegisterGameObject(GameObject gameObject)
@@ -19,6 +20,8 @@ public class Scene
 		Drawables.Add(gameObject);
 		if (gameObject is IMouseInteractable interactable)
 			MouseInteractables.Add(interactable);
+		if (gameObject is IEventReceiver receiver)
+			EventReceivers.Add(receiver);
 	}
 
 	public void RegisterCamera(Camera camera)
@@ -70,6 +73,13 @@ public class Scene
 		foreach (IMouseInteractable interactable in MouseInteractables)
 			if (interactable.IsMouseOver(mousePosition))
 				interactable.OnClick();
+	}
+
+	internal void DoEvents(IInputEvent e)
+	{
+		HandleEvent(e);
+		foreach (IEventReceiver receiver in EventReceivers)
+			receiver.HandleEvent(e);
 	}
 
 	internal static Scene FromDto(SceneDto dto)

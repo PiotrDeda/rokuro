@@ -1,3 +1,4 @@
+using System.Reflection;
 using Rokuro.Core;
 using Rokuro.Dtos;
 using Rokuro.Inputs;
@@ -84,8 +85,15 @@ public class Scene
 
 	internal static Scene FromDto(SceneDto dto)
 	{
-		Scene scene = new();
+		Type type = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).SelectMany(a => a.GetTypes())
+			.FirstOrDefault(t => t.FullName != null && t.FullName.Equals(dto.Class))!;
+		var scene = (Scene)Activator.CreateInstance(type)!;
 		scene.Name = dto.Name;
+		foreach (CustomPropertyDto property in dto.CustomProperties)
+		{
+			PropertyInfo? pi = type.GetProperty(property.Name);
+			pi?.SetValue(scene, Convert.ChangeType(property.Value, pi.PropertyType));
+		}
 		dto.Cameras.ForEach(cameraDto => scene.RegisterCamera(Camera.FromDto(cameraDto)));
 		dto.GameObjects.ForEach(objectDto =>
 			scene.RegisterGameObject(GameObject.FromDto(objectDto, scene.GetCamera(objectDto.Camera))));

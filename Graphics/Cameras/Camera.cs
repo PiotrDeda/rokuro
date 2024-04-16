@@ -8,12 +8,7 @@ public class Camera
 {
 	Vector2D _position = new(0, 0);
 
-	public Camera(string name)
-	{
-		Name = name;
-	}
-
-	public string Name { get; protected set; }
+	public string Name { get; set; } = "";
 	public virtual float Scale => Scales[SelectedScale];
 
 	public Vector2D Position
@@ -57,7 +52,8 @@ public class Camera
 	{
 		Type type = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).SelectMany(a => a.GetTypes())
 			.FirstOrDefault(t => t.FullName != null && t.FullName.Equals(dto.Class))!;
-		var camera = (Camera)Activator.CreateInstance(type, dto.Name)!;
+		var camera = (Camera)Activator.CreateInstance(type)!;
+		camera.Name = dto.Name;
 		foreach (CustomPropertyDto property in dto.CustomProperties)
 		{
 			PropertyInfo? pi = type.GetProperty(property.Name);

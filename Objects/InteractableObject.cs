@@ -1,12 +1,9 @@
-using Rokuro.Graphics;
 using Rokuro.MathUtils;
 
 namespace Rokuro.Objects;
 
 public class InteractableObject : GameObject, IMouseInteractable
 {
-	public InteractableObject(Vector2D position, Sprite sprite, Camera camera) : base(position, sprite, camera) {}
-
 	public bool WasMouseoverHandled { get; set; } = false;
 
 	public bool IsMouseOver(Vector2D mousePosition)

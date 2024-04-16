@@ -6,17 +6,8 @@ namespace Rokuro.Objects;
 public class TextObject : GameObject
 {
 	Color _color;
-	Font _font;
-	string _text;
-
-	public TextObject(Vector2D position, Camera camera, string text, Color color, Font font)
-		: base(position, new TextSprite(), camera)
-	{
-		_text = text;
-		_color = color;
-		_font = font;
-		Sprite?.RefreshRawTexture(Text, Font, Color);
-	}
+	Font _font = SpriteManager.DefaultFont;
+	string _text = "";
 
 	public string Text
 	{

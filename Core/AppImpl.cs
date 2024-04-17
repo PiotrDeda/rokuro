@@ -60,8 +60,8 @@ class AppImpl
 		SpriteManager.LoadTextures();
 		SoundManager.LoadSoundsAndMusic();
 
-		if (Directory.Exists("assets/autogen/data/scenes"))
-			SceneManager.LoadScenes(Directory.GetFiles("assets/autogen/data/scenes", "*.json")
+		if (Directory.Exists(Path.Combine("assets", "autogen", "scenes")))
+			SceneManager.LoadScenes(Directory.GetFiles(Path.Combine("assets", "autogen", "scenes"), "*.json")
 				.Select(path => JsonConvert.DeserializeObject<SceneDto>(File.ReadAllText(path))!)
 				.Select(sceneDto => Scene.FromDto(sceneDto))
 				.ToList());

@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Rokuro.Dtos;
 using Rokuro.Graphics;
@@ -5,6 +6,8 @@ using Rokuro.Inputs;
 using Rokuro.MathUtils;
 using Rokuro.Sound;
 using SDL2;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 using static SDL2.SDL.SDL_EventType;
 using static SDL2.SDL.SDL_RendererFlags;
 using static SDL2.SDL.SDL_WindowEventID;
@@ -41,17 +44,53 @@ class AppImpl
 
 	public virtual void Setup(AppProperties properties)
 	{
+		SettingsModel settings = new();
+		if (File.Exists("settings.yaml"))
+		{
+			try
+			{
+				settings = new DeserializerBuilder()
+					.WithNamingConvention(UnderscoredNamingConvention.Instance)
+					.Build()
+					.Deserialize<SettingsModel>(File.ReadAllText("settings.yaml"));
+			}
+			catch (Exception e)
+			{
+				Logger.ThrowError($"Couldn't load settings: {e.Message}");
+				return;
+			}
+		}
+		File.WriteAllText("settings.yaml", new SerializerBuilder()
+			.WithNamingConvention(UnderscoredNamingConvention.Instance)
+			.Build()
+			.Serialize(settings));
+
+		SDL.SDL_WindowFlags windowFlags = 0;
+		if (settings.Fullscreen == 0)
+			windowFlags = SDL_WINDOW_RESIZABLE;
+		else if (settings.Fullscreen == 1)
+			windowFlags = SDL_WINDOW_FULLSCREEN;
+		else if (settings.Fullscreen == 2)
+			windowFlags = SDL_WINDOW_FULLSCREEN_DESKTOP;
+		else
+			Logger.ThrowError("Invalid fullscreen setting in settings.yaml");
 		Window = SDL.SDL_CreateWindow(properties.Name, SDL.SDL_WINDOWPOS_UNDEFINED, SDL.SDL_WINDOWPOS_UNDEFINED,
-			properties.WindowWidth, properties.WindowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+			properties.WindowWidth, properties.WindowHeight, windowFlags);
 		if (Window == IntPtr.Zero)
-			Logger.ThrowSDLError("Window could not be created!", ErrorSource.SDL);
+			Logger.ThrowSDLError("Window could not be created", ErrorSource.SDL);
 
 		// TODO: Animation speed is wrong without VSync – needs a deeper fix (delta time?)
-		Renderer = SDL.SDL_CreateRenderer(Window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+		SDL.SDL_RendererFlags rendererFlags = SDL_RENDERER_PRESENTVSYNC;
+		if (!settings.HardwareAcceleration)
+			rendererFlags |= SDL_RENDERER_SOFTWARE;
+		Renderer = SDL.SDL_CreateRenderer(Window, -1, rendererFlags);
 		if (Renderer == IntPtr.Zero)
-			Logger.ThrowSDLError("Renderer could not be created!", ErrorSource.SDL);
+			Logger.ThrowSDLError("Renderer could not be created", ErrorSource.SDL);
 		SDL.SDL_SetRenderDrawColor(Renderer, 0x00, 0x00, 0x00, 0xFF);
 		SDL.SDL_RenderSetLogicalSize(Renderer, properties.WindowWidth, properties.WindowHeight);
+		if (settings.RenderQuality > 2)
+			Logger.ThrowError("Invalid render quality setting in settings.yaml");
+		SDL.SDL_SetHint(SDL.SDL_HINT_RENDER_SCALE_QUALITY, settings.RenderQuality.ToString());
 
 		Drawer.BaseWidth = properties.WindowWidth;
 		Drawer.BaseHeight = properties.WindowHeight;
@@ -116,16 +155,16 @@ class AppImpl
 		Logger.LogInfo("Initializing SDL...");
 
 		if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO | SDL.SDL_INIT_AUDIO | SDL.SDL_INIT_TIMER) != 0)
-			Logger.ThrowSDLError("SDL could not initialize!", ErrorSource.SDL);
+			Logger.ThrowSDLError("SDL could not initialize", ErrorSource.SDL);
 
 		if (SDL_image.IMG_Init(SDL_image.IMG_InitFlags.IMG_INIT_PNG) != (int)SDL_image.IMG_InitFlags.IMG_INIT_PNG)
-			Logger.ThrowSDLError("SDL_image could not initialize!", ErrorSource.IMG);
+			Logger.ThrowSDLError("SDL_image could not initialize", ErrorSource.IMG);
 
 		if (SDL_ttf.TTF_Init() != 0)
-			Logger.ThrowSDLError("SDL_ttf could not initialize!", ErrorSource.TTF);
+			Logger.ThrowSDLError("SDL_ttf could not initialize", ErrorSource.TTF);
 
 		if (SDL_mixer.Mix_OpenAudio(44100, SDL_mixer.MIX_DEFAULT_FORMAT, 2, 2048) != 0)
-			Logger.ThrowSDLError("SDL_mixer could not initialize!", ErrorSource.Mix);
+			Logger.ThrowSDLError("SDL_mixer could not initialize", ErrorSource.Mix);
 
 		Logger.LogInfo("SDL initialized");
 	}
@@ -171,5 +210,15 @@ class AppImpl
 
 		Drawer.WidthMultiplier = baseWidth / width;
 		Drawer.HeightMultiplier = baseHeight / height;
+	}
+
+	class SettingsModel
+	{
+		[YamlMember(Description = "Whether application should be launched windowed or in fullscreen. 0 - Windowed, 1 - Native fullscreen, 2 - Borderless [Default: 0]")]
+		[UsedImplicitly] public int Fullscreen { get; set; }
+		[YamlMember(Description = "Scaling method used. 0 - Nearest Neighbor, 1 - Linear, 2 - 'Best' (currently the same as linear) [Default: 2]")]
+		[UsedImplicitly] public int RenderQuality { get; set; } = 2;
+		[YamlMember(Description = "Whether to use hardware acceleration. [Default: true]")]
+		[UsedImplicitly] public bool HardwareAcceleration { get; set; } = true;
 	}
 }

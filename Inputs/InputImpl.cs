@@ -11,6 +11,10 @@ class InputImpl
 
 	Dictionary<Keycode, KeyEvent> KeyEvents { get; } = new();
 
+	public event EventHandler<KeyDownEventArgs>? KeyDownEvent;
+	public event EventHandler<MouseMotionEventArgs>? MouseMotionEvent;
+	public event EventHandler<MouseWheelEventArgs>? MouseWheelEvent;
+
 	public virtual void SetKeyEvent(Keycode key, KeyEvent keyEvent)
 	{
 		foreach ((Keycode k, _) in KeyEvents.Where(x => x.Value == keyEvent).ToList())
@@ -30,18 +34,24 @@ class InputImpl
 			(int)((y - Drawer.HeightOffset) * Drawer.HeightMultiplier));
 	}
 
-	internal virtual IInputEvent GetInputEvent(SDL.SDL_Event e) => e.type switch {
-		SDL_MOUSEMOTION => new MouseMotionEvent(
-			new(e.motion.xrel, e.motion.yrel),
-			(e.motion.state & SDL.SDL_BUTTON_LMASK) != 0,
-			(e.motion.state & SDL.SDL_BUTTON_RMASK) != 0
-		),
-		SDL_MOUSEWHEEL => new MouseWheelEvent(
-			new(e.wheel.x, e.wheel.y)
-		),
-		SDL_KEYDOWN => KeyEvents.TryGetValue((Keycode)e.key.keysym.sym, out KeyEvent? keyEvent)
-			? keyEvent
-			: new NullEvent(),
-		_ => new NullEvent()
-	};
+	internal virtual void HandleEvent(SDL.SDL_Event e)
+	{
+		switch (e.type)
+		{
+			case SDL_MOUSEMOTION:
+				MouseMotionEvent?.Invoke(this, new(
+					new(e.motion.xrel, e.motion.yrel),
+					(e.motion.state & SDL.SDL_BUTTON_LMASK) != 0,
+					(e.motion.state & SDL.SDL_BUTTON_RMASK) != 0
+				));
+				break;
+			case SDL_MOUSEWHEEL:
+				MouseWheelEvent?.Invoke(this, new(new(e.wheel.x, e.wheel.y)));
+				break;
+			case SDL_KEYDOWN:
+				if (KeyEvents.TryGetValue((Keycode)e.key.keysym.sym, out KeyEvent? keyEvent))
+					KeyDownEvent?.Invoke(this, new(keyEvent));
+				break;
+		}
+	}
 }

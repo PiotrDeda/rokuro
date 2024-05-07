@@ -1,6 +1,6 @@
 using Rokuro.Core;
 
-namespace Rokuro.Graphics;
+namespace Rokuro.Objects;
 
 class SceneManagerImpl
 {

@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Rokuro.Sound;
 
-namespace Rokuro.Objects.SoundPlayer;
+namespace Rokuro.Objects.Library.SoundPlayer;
 
 public class PlayMusic : InteractableObject
 {

@@ -1,4 +1,4 @@
-namespace Rokuro.Graphics;
+namespace Rokuro.Objects;
 
 public static class SceneManager
 {

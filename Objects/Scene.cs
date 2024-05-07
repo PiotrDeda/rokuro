@@ -1,10 +1,10 @@
 using System.Reflection;
 using Rokuro.Core;
 using Rokuro.Dtos;
+using Rokuro.Graphics;
 using Rokuro.MathUtils;
-using Rokuro.Objects;
 
-namespace Rokuro.Graphics;
+namespace Rokuro.Objects;
 
 public class Scene
 {

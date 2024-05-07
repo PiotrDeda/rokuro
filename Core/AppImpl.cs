@@ -4,6 +4,7 @@ using Rokuro.Dtos;
 using Rokuro.Graphics;
 using Rokuro.Inputs;
 using Rokuro.MathUtils;
+using Rokuro.Objects;
 using Rokuro.Sound;
 using SDL2;
 using YamlDotNet.Serialization;

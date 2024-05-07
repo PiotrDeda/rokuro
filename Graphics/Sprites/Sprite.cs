@@ -14,7 +14,7 @@ public abstract class Sprite
 	public double Rotation { get; set; }
 	public double ScaleX { get; set; } = 1;
 	public double ScaleY { get; set; } = 1;
-	public Vector2D? Origin { get; set; }
+	public Vector2I? Origin { get; set; }
 	public bool FlipX { get; set; }
 	public bool FlipY { get; set; }
 

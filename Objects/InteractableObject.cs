@@ -6,11 +6,11 @@ public class InteractableObject : GameObject, IMouseInteractable
 {
 	public bool WasMouseoverHandled { get; set; } = false;
 
-	public bool IsMouseOver(Vector2D mousePosition)
+	public bool IsMouseOver(Vector2I mousePosition)
 	{
 		if (!Enabled || Sprite == null || Camera == null)
 			return false;
-		Vector2D screenPosition = Camera.GetScreenPosition(Position);
+		Vector2I screenPosition = Camera.GetScreenPosition(Position);
 		return mousePosition.X >= screenPosition.X &&
 			   mousePosition.X <= screenPosition.X + Sprite.Width * Camera.Scale &&
 			   mousePosition.Y >= screenPosition.Y &&

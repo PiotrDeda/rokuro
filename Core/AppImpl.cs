@@ -114,7 +114,7 @@ class AppImpl
 		{
 			while (SDL.SDL_PollEvent(out SDL.SDL_Event e) != 0)
 			{
-				Vector2D mousePosition = Input.GetMousePosition();
+				Vector2I mousePosition = Input.GetMousePosition();
 				SceneManager.CurrentScene.DoMouseOvers(mousePosition);
 
 				switch (e.type)

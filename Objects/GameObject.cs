@@ -8,7 +8,7 @@ namespace Rokuro.Objects;
 public class GameObject
 {
 	public bool Enabled { get; set; } = true;
-	public Vector2D Position { get; set; }
+	public Vector2I Position { get; set; } = new(0, 0);
 	public Sprite? Sprite { get; set; }
 	public Camera? Camera { get; set; }
 

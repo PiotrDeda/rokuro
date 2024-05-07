@@ -46,7 +46,7 @@ public static class Drawer
 		set => DrawerImpl.ActiveImpl.BgColor = value;
 	}
 
-	public static void Draw(Sprite sprite, Vector2D position, float scale) =>
+	public static void Draw(Sprite sprite, Vector2I position, float scale) =>
 		DrawerImpl.ActiveImpl.Draw(sprite, position, scale);
 
 	internal static IntPtr GetTextRawTexture(string text, Font font, Color color) =>

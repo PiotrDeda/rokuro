@@ -27,7 +27,7 @@ class InputImpl
 		KeyEvents.Remove(KeyEvents.First(x => x.Value == keyEvent).Key);
 	}
 
-	public virtual Vector2D GetMousePosition()
+	public virtual Vector2I GetMousePosition()
 	{
 		SDL.SDL_GetMouseState(out int x, out int y);
 		return new((int)((x - Drawer.WidthOffset) * Drawer.WidthMultiplier),

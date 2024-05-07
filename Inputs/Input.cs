@@ -25,7 +25,7 @@ public static class Input
 
 	public static void SetKeyEvent(Keycode key, KeyEvent keyEvent) => InputImpl.ActiveImpl.SetKeyEvent(key, keyEvent);
 	public static void RemoveKeyEvent(KeyEvent keyEvent) => InputImpl.ActiveImpl.RemoveKeyEvent(keyEvent);
-	public static Vector2D GetMousePosition() => InputImpl.ActiveImpl.GetMousePosition();
+	public static Vector2I GetMousePosition() => InputImpl.ActiveImpl.GetMousePosition();
 
 	internal static void HandleEvent(SDL.SDL_Event e) => InputImpl.ActiveImpl.HandleEvent(e);
 }

@@ -18,7 +18,7 @@ class DrawerImpl
 
 	IntPtr Renderer { get; } = App.Renderer;
 
-	public virtual void Draw(Sprite sprite, Vector2D position, float scale)
+	public virtual void Draw(Sprite sprite, Vector2I position, float scale)
 	{
 		IntPtr rawTexture = sprite.Texture.RawTexture;
 		if (rawTexture != IntPtr.Zero)
@@ -42,7 +42,7 @@ class DrawerImpl
 				}
 				else
 				{
-					SDL.SDL_Point origin = new() { x = sprite.Origin.Value.X, y = sprite.Origin.Value.Y };
+					SDL.SDL_Point origin = new() { x = sprite.Origin.X, y = sprite.Origin.Y };
 					SDL.SDL_RenderCopyEx(Renderer, rawTexture, sprite.GetClip(), ref rect, sprite.Rotation, ref origin,
 						flip);
 				}

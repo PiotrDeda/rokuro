@@ -47,7 +47,10 @@ public static class Drawer
 	}
 
 	public static void Draw(Sprite sprite, Vector2I position, float scale) =>
-		DrawerImpl.ActiveImpl.Draw(sprite, position, scale);
+		DrawerImpl.ActiveImpl.DrawSprite(sprite, position, scale);
+
+	public static void DrawLine(Vector2I start, Vector2I end, Color color, int thickness) =>
+		DrawerImpl.ActiveImpl.DrawLine(start, end, color, thickness);
 
 	internal static IntPtr GetTextRawTexture(string text, Font font, Color color) =>
 		DrawerImpl.ActiveImpl.GetTextRawTexture(text, font, color);

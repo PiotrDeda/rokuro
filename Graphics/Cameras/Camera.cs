@@ -29,7 +29,10 @@ public class Camera
 
 	public virtual Vector2I GetScreenPosition(Vector2I position) => (position - Position) * Scale;
 
-	public void Draw(Sprite sprite, Vector2I position) => Drawer.Draw(sprite, GetScreenPosition(position), Scale);
+	public void DrawSprite(Sprite sprite, Vector2I position) => Drawer.Draw(sprite, GetScreenPosition(position), Scale);
+
+	public void DrawLine(Vector2I start, Vector2I end, Color color, int thickness) =>
+		Drawer.DrawLine(GetScreenPosition(start), GetScreenPosition(end), color, (int)(thickness * Scale));
 
 	public void CenterOn(Vector2I position) =>
 		Position = position - new Vector2I(Drawer.BaseWidth / 2, Drawer.BaseHeight / 2) / Scale;

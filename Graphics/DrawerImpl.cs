@@ -18,40 +18,44 @@ class DrawerImpl
 
 	IntPtr Renderer { get; } = App.Renderer;
 
-	public virtual void Draw(Sprite sprite, Vector2I position, float scale)
+	public virtual void DrawSprite(Sprite sprite, Vector2I position, float scale)
 	{
 		IntPtr rawTexture = sprite.Texture.RawTexture;
-		if (rawTexture != IntPtr.Zero)
+		if (rawTexture == IntPtr.Zero)
+			return;
+		SDL.SDL_Rect rect = new() {
+			x = position.X, y = position.Y,
+			w = (int)(sprite.Texture.Width * scale * sprite.ScaleX),
+			h = (int)(sprite.Texture.Height * scale * sprite.ScaleY)
+		};
+		if (sprite.FlipX || sprite.FlipY || sprite.Rotation != 0)
 		{
-			SDL.SDL_Rect rect = new() {
-				x = position.X, y = position.Y,
-				w = (int)(sprite.Texture.Width * scale * sprite.ScaleX),
-				h = (int)(sprite.Texture.Height * scale * sprite.ScaleY)
-			};
-			if (sprite.FlipX || sprite.FlipY || sprite.Rotation != 0)
+			var flip = SDL.SDL_RendererFlip.SDL_FLIP_NONE;
+			if (sprite.FlipX)
+				flip |= SDL.SDL_RendererFlip.SDL_FLIP_HORIZONTAL;
+			if (sprite.FlipY)
+				flip |= SDL.SDL_RendererFlip.SDL_FLIP_VERTICAL;
+			if (sprite.Origin is null)
 			{
-				var flip = SDL.SDL_RendererFlip.SDL_FLIP_NONE;
-				if (sprite.FlipX)
-					flip |= SDL.SDL_RendererFlip.SDL_FLIP_HORIZONTAL;
-				if (sprite.FlipY)
-					flip |= SDL.SDL_RendererFlip.SDL_FLIP_VERTICAL;
-				if (sprite.Origin is null)
-				{
-					SDL.SDL_RenderCopyEx(Renderer, rawTexture, sprite.GetClip(), ref rect, sprite.Rotation, IntPtr.Zero,
-						flip);
-				}
-				else
-				{
-					SDL.SDL_Point origin = new() { x = sprite.Origin.X, y = sprite.Origin.Y };
-					SDL.SDL_RenderCopyEx(Renderer, rawTexture, sprite.GetClip(), ref rect, sprite.Rotation, ref origin,
-						flip);
-				}
+				SDL.SDL_RenderCopyEx(Renderer, rawTexture, sprite.GetClip(), ref rect, sprite.Rotation, IntPtr.Zero, flip);
 			}
 			else
 			{
-				SDL.SDL_RenderCopy(Renderer, rawTexture, sprite.GetClip(), ref rect);
+				SDL.SDL_Point origin = new() { x = sprite.Origin.X, y = sprite.Origin.Y };
+				SDL.SDL_RenderCopyEx(Renderer, rawTexture, sprite.GetClip(), ref rect, sprite.Rotation, ref origin, flip);
 			}
 		}
+		else
+		{
+			SDL.SDL_RenderCopy(Renderer, rawTexture, sprite.GetClip(), ref rect);
+		}
+	}
+
+	public virtual void DrawLine(Vector2I start, Vector2I end, Color color, int thickness)
+	{
+		SDL.SDL_SetRenderDrawColor(Renderer, color.R, color.G, color.B, color.A);
+		for (int i = -thickness / 2; i < thickness - thickness / 2; i++)
+			SDL.SDL_RenderDrawLine(Renderer, start.X, start.Y + i, end.X, end.Y + i);
 	}
 
 	internal virtual IntPtr GetTextRawTexture(string text, Font font, Color color)

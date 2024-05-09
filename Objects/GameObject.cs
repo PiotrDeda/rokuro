@@ -15,7 +15,7 @@ public class GameObject
 	public virtual void Draw()
 	{
 		if (Enabled && Sprite != null && Camera != null)
-			Camera.Draw(Sprite, Position);
+			Camera.DrawSprite(Sprite, Position);
 	}
 
 	public static GameObject FromDto(GameObjectDto dto, Camera camera)

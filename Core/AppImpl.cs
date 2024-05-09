@@ -79,6 +79,8 @@ class AppImpl
 			.Build()
 			.Serialize(settings));
 
+		FPSLimit = settings.FPSLimit;
+
 		SDL.SDL_WindowFlags windowFlags = 0;
 		if (settings.Fullscreen == 0)
 			windowFlags = SDL_WINDOW_RESIZABLE;
@@ -161,7 +163,6 @@ class AppImpl
 				SDL.SDL_Delay(FrameDelay - frameTime);
 			frameTime = SDL.SDL_GetTicks() - startTime;
 			DeltaTime = (int)frameTime;
-			Console.WriteLine(DeltaTime);
 		}
 
 		ShutdownSDL();
@@ -253,5 +254,8 @@ class AppImpl
 			"Whether to use vertical synchronization (synchronizing to display refresh rate). [Default: true]")]
 		[UsedImplicitly]
 		public bool VSync { get; set; } = true;
+
+		[YamlMember(Description = "Set max FPS limit. [Default: 60]")] [UsedImplicitly]
+		public int FPSLimit { get; set; } = 60;
 	}
 }

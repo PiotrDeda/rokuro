@@ -1,3 +1,5 @@
+using Rokuro.Core;
+
 namespace Rokuro.Graphics;
 
 public class PlayableSprite : Sprite
@@ -21,6 +23,7 @@ public class PlayableSprite : Sprite
 	}
 
 	int CurrentFrame { get; set; }
+	int CurrentTime { get; set; }
 	bool IsPlaying { get; set; }
 	Action? Callback { get; set; }
 
@@ -28,13 +31,19 @@ public class PlayableSprite : Sprite
 	{
 		if (IsPlaying)
 		{
-			if (CurrentFrame >= Texture.Delay * Texture.FrameCount)
+			CurrentTime += App.DeltaTime;
+			if (CurrentTime >= Texture.Delay)
 			{
-				IsPlaying = false;
-				Callback?.Invoke();
-				return SpriteManager.BlankRect;
+				CurrentTime = 0;
+				CurrentFrame++;
+				if (CurrentFrame >= Texture.FrameCount)
+				{
+					IsPlaying = false;
+					Callback?.Invoke();
+					return SpriteManager.BlankRect;
+				}
 			}
-			return Texture.Clips[CurrentFrame++ / Texture.Delay % Texture.FrameCount + State * Texture.FrameCount];
+			return Texture.Clips[CurrentFrame + State * Texture.FrameCount];
 		}
 		return SpriteManager.BlankRect;
 	}

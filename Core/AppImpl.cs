@@ -18,14 +18,28 @@ namespace Rokuro.Core;
 
 class AppImpl
 {
+	int _fpsLimit = 60;
 	IntPtr _renderer = IntPtr.Zero;
 
 	public AppImpl()
 	{
 		InitSDL();
+		FrameDelay = (uint)(1000 / _fpsLimit);
 	}
 
 	public static AppImpl ActiveImpl { get; set; } = new();
+
+	public int FPSLimit
+	{
+		get => _fpsLimit;
+		set
+		{
+			_fpsLimit = value;
+			FrameDelay = (uint)(1000 / value);
+		}
+	}
+
+	public int DeltaTime { get; set; }
 
 	internal IntPtr Renderer
 	{
@@ -38,10 +52,9 @@ class AppImpl
 		private set => _renderer = value;
 	}
 
-	internal bool WasSetup { get; private set; }
-
 	IntPtr Window { get; set; }
 	bool Running { get; set; } = true;
+	uint FrameDelay { get; set; }
 
 	public virtual void Setup(AppProperties properties)
 	{
@@ -80,10 +93,11 @@ class AppImpl
 		if (Window == IntPtr.Zero)
 			Logger.ThrowSDLError("Window could not be created", ErrorSource.SDL);
 
-		// TODO: Animation speed is wrong without VSync – needs a deeper fix (delta time?)
-		SDL.SDL_RendererFlags rendererFlags = SDL_RENDERER_PRESENTVSYNC;
-		if (!settings.HardwareAcceleration)
-			rendererFlags |= SDL_RENDERER_SOFTWARE;
+		SDL.SDL_RendererFlags rendererFlags = 0;
+		if (settings.HardwareAcceleration)
+			rendererFlags |= SDL_RENDERER_ACCELERATED;
+		if (settings.VSync)
+			rendererFlags |= SDL_RENDERER_PRESENTVSYNC;
 		Renderer = SDL.SDL_CreateRenderer(Window, -1, rendererFlags);
 		if (Renderer == IntPtr.Zero)
 			Logger.ThrowSDLError("Renderer could not be created", ErrorSource.SDL);
@@ -105,14 +119,15 @@ class AppImpl
 				.Select(path => JsonConvert.DeserializeObject<SceneDto>(File.ReadAllText(path))!)
 				.Select(sceneDto => Scene.FromDto(sceneDto))
 				.ToList());
-
-		WasSetup = true;
 	}
 
 	public virtual void Run()
 	{
+		uint startTime, frameTime;
 		while (Running)
 		{
+			startTime = SDL.SDL_GetTicks();
+
 			while (SDL.SDL_PollEvent(out SDL.SDL_Event e) != 0)
 			{
 				Vector2I mousePosition = Input.GetMousePosition();
@@ -140,6 +155,13 @@ class AppImpl
 			SceneManager.CurrentScene.DoRender();
 			Drawer.RenderComplete();
 			SceneManager.SwitchScenes();
+
+			frameTime = SDL.SDL_GetTicks() - startTime;
+			if (frameTime < FrameDelay)
+				SDL.SDL_Delay(FrameDelay - frameTime);
+			frameTime = SDL.SDL_GetTicks() - startTime;
+			DeltaTime = (int)frameTime;
+			Console.WriteLine(DeltaTime);
 		}
 
 		ShutdownSDL();
@@ -173,7 +195,6 @@ class AppImpl
 	void ShutdownSDL()
 	{
 		Logger.LogInfo("Shutting down SDL...");
-		WasSetup = false;
 		SDL.SDL_DestroyWindow(Window);
 		SDL_mixer.Mix_Quit();
 		SDL_ttf.TTF_Quit();
@@ -215,11 +236,22 @@ class AppImpl
 
 	class SettingsModel
 	{
-		[YamlMember(Description = "Whether application should be launched windowed or in fullscreen. 0 - Windowed, 1 - Native fullscreen, 2 - Borderless [Default: 0]")]
-		[UsedImplicitly] public int Fullscreen { get; set; }
-		[YamlMember(Description = "Scaling method used. 0 - Nearest Neighbor, 1 - Linear, 2 - 'Best' (currently the same as linear) [Default: 2]")]
-		[UsedImplicitly] public int RenderQuality { get; set; } = 2;
-		[YamlMember(Description = "Whether to use hardware acceleration. [Default: true]")]
-		[UsedImplicitly] public bool HardwareAcceleration { get; set; } = true;
+		[YamlMember(Description =
+			"Whether application should be launched windowed or in fullscreen. 0 - Windowed, 1 - Native fullscreen, 2 - Borderless [Default: 0]")]
+		[UsedImplicitly]
+		public int Fullscreen { get; set; }
+
+		[YamlMember(Description =
+			"Scaling method used. 0 - Nearest Neighbor, 1 - Linear, 2 - 'Best' (currently the same as linear) [Default: 2]")]
+		[UsedImplicitly]
+		public int RenderQuality { get; set; } = 2;
+
+		[YamlMember(Description = "Whether to use hardware acceleration. [Default: true]")] [UsedImplicitly]
+		public bool HardwareAcceleration { get; set; } = true;
+
+		[YamlMember(Description =
+			"Whether to use vertical synchronization (synchronizing to display refresh rate). [Default: true]")]
+		[UsedImplicitly]
+		public bool VSync { get; set; } = true;
 	}
 }

@@ -1,3 +1,5 @@
+using Rokuro.Core;
+
 namespace Rokuro.Graphics;
 
 public class AnimatedSprite : Sprite
@@ -21,7 +23,16 @@ public class AnimatedSprite : Sprite
 	}
 
 	int CurrentFrame { get; set; }
+	int CurrentTime { get; set; }
 
-	internal override IntPtr GetClip() =>
-		Texture.Clips[CurrentFrame++ / Texture.Delay % Texture.FrameCount + State * Texture.FrameCount];
+	internal override IntPtr GetClip()
+	{
+		CurrentTime += App.DeltaTime;
+		if (CurrentTime >= Texture.Delay)
+		{
+			CurrentTime = 0;
+			CurrentFrame = (CurrentFrame + 1) % Texture.FrameCount;
+		}
+		return Texture.Clips[CurrentFrame + State * Texture.FrameCount];
+	}
 }

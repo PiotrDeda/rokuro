@@ -65,6 +65,7 @@ class AppImpl
 			{
 				settings = new DeserializerBuilder()
 					.WithNamingConvention(UnderscoredNamingConvention.Instance)
+					.IgnoreUnmatchedProperties()
 					.Build()
 					.Deserialize<SettingsModel>(File.ReadAllText("settings.yaml"));
 			}
@@ -255,7 +256,7 @@ class AppImpl
 		[UsedImplicitly]
 		public bool VSync { get; set; } = true;
 
-		[YamlMember(Description = "Set max FPS limit. [Default: 60]")] [UsedImplicitly]
+		[YamlMember(Alias = "FpsLimit", Description = "Set max FPS limit. [Default: 60]")] [UsedImplicitly]
 		public int FPSLimit { get; set; } = 60;
 	}
 }

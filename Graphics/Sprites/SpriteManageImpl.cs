@@ -63,6 +63,7 @@ class SpriteManageImpl
 			{
 				textureConfig = new DeserializerBuilder()
 					.WithNamingConvention(UnderscoredNamingConvention.Instance)
+					.IgnoreUnmatchedProperties()
 					.Build()
 					.Deserialize<TextureConfigModel>(File.ReadAllText(configFilename));
 			}

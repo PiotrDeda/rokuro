@@ -27,7 +27,8 @@ public class Camera
 	float[] Scales { get; } = { 0.5f, 0.75f, 1.0f, 1.25f, 1.5f };
 	int SelectedScale { get; set; } = 2;
 
-	public virtual Vector2I GetScreenPosition(Vector2I position) => (position - Position) * Scale;
+	public virtual Vector2I GetScreenPosition(Vector2I position) =>
+		new((int)((position.X - Position.X) * Scale), (int)((position.Y - Position.Y) * Scale));
 
 	public void DrawSprite(Sprite sprite, Vector2I position) => Drawer.Draw(sprite, GetScreenPosition(position), Scale);
 

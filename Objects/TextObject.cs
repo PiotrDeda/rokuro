@@ -9,6 +9,11 @@ public class TextObject : GameObject
 	Font _font = SpriteManager.DefaultFont;
 	string _text = "";
 
+	public TextObject()
+	{
+		base.Sprite = new TextSprite();
+	}
+
 	public string Text
 	{
 		get => _text;

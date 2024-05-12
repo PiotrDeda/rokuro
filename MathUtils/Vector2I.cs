@@ -20,6 +20,11 @@ public record Vector2I(int X, int Y)
 		Y < min.Y ? min.Y : Y > max.Y ? max.Y : Y
 	);
 
+	public static Vector2I Interpolate(Vector2I start, Vector2I end, float value, Func<float, float> function) => new(
+		(int)(start.X + (end.X - start.X) * function(value)),
+		(int)(start.Y + (end.Y - start.Y) * function(value))
+	);
+
 	public static Vector2I operator +(Vector2I left, Vector2I right) => new(left.X + right.X, left.Y + right.Y);
 	public static Vector2I operator -(Vector2I left, Vector2I right) => new(left.X - right.X, left.Y - right.Y);
 	public static Vector2I operator *(Vector2I left, Vector2I right) => new(left.X * right.X, left.Y * right.Y);

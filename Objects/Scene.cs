@@ -9,14 +9,15 @@ namespace Rokuro.Objects;
 public class Scene
 {
 	public string Name { get; protected set; } = "Scene";
+	public Coroutines Coroutines { get; } = new();
 
-	protected List<GameObject> Drawables { get; } = new();
+	protected List<GameObject> GameObjects { get; } = new();
 	protected List<IMouseInteractable> MouseInteractables { get; } = new();
 	protected List<Camera> Cameras { get; } = new();
 
 	public void RegisterGameObject(GameObject gameObject)
 	{
-		Drawables.Add(gameObject);
+		GameObjects.Add(gameObject);
 		if (gameObject is IMouseInteractable interactable)
 			MouseInteractables.Add(interactable);
 	}
@@ -41,10 +42,17 @@ public class Scene
 
 	public virtual void OnEnter() {}
 
-	public virtual void DoRender()
+	internal void DoCoroutines()
 	{
-		foreach (GameObject drawable in Drawables)
-			drawable.Draw();
+		Coroutines.Execute();
+		foreach (GameObject gameObject in GameObjects)
+			gameObject.Coroutines.Execute();
+	}
+
+	internal void DoRender()
+	{
+		foreach (GameObject gameObject in GameObjects)
+			gameObject.Draw();
 	}
 
 	internal void DoMouseOvers(Vector2I mousePosition)

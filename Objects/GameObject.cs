@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Reflection;
+using Rokuro.Core;
 using Rokuro.Dtos;
 using Rokuro.Graphics;
 using Rokuro.MathUtils;
@@ -11,6 +13,22 @@ public class GameObject
 	public Vector2I Position { get; set; } = Vector2I.Zero;
 	public Sprite? Sprite { get; set; }
 	public Camera? Camera { get; set; }
+	public Coroutines Coroutines { get; } = new();
+
+	public IEnumerator MoveTo(Vector2I end, int durationMs, Func<float, float> interpolationFunction)
+	{
+		Vector2I start = Position;
+		int elapsedTime = 0;
+		float progress = 0;
+		while (progress < 1)
+		{
+			progress = (float)elapsedTime / durationMs;
+			Position = Vector2I.Interpolate(start, end, (float)elapsedTime / durationMs, interpolationFunction);
+			elapsedTime += App.DeltaTime;
+			yield return null;
+		}
+		Position = end;
+	}
 
 	public virtual void Draw()
 	{

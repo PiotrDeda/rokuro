@@ -154,6 +154,7 @@ class AppImpl
 				Input.HandleEvent(e);
 			}
 
+			SceneManager.CurrentScene.DoCoroutines();
 			Drawer.RenderStart();
 			SceneManager.CurrentScene.DoRender();
 			Drawer.RenderComplete();

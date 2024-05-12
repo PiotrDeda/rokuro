@@ -4,7 +4,7 @@ namespace Rokuro.Objects;
 
 public class LineObject : GameObject
 {
-	public Vector2I End { get; set; } = new(0, 0);
+	public Vector2I End { get; set; } = Vector2I.Zero;
 	public Color Color { get; set; } = Color.White;
 	public int Thickness { get; set; } = 1;
 

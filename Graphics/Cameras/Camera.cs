@@ -6,7 +6,7 @@ namespace Rokuro.Graphics;
 
 public class Camera
 {
-	Vector2I _position = new(0, 0);
+	Vector2I _position = Vector2I.Zero;
 
 	public string Name { get; set; } = "";
 	public virtual float Scale => Scales[SelectedScale];
@@ -21,8 +21,8 @@ public class Camera
 		}
 	}
 
-	public Vector2I BoundaryMin { get; set; } = new(0, 0);
-	public Vector2I BoundaryMax { get; set; } = new(0, 0);
+	public Vector2I BoundaryMin { get; set; } = Vector2I.Zero;
+	public Vector2I BoundaryMax { get; set; } = Vector2I.Zero;
 
 	float[] Scales { get; } = { 0.5f, 0.75f, 1.0f, 1.25f, 1.5f };
 	int SelectedScale { get; set; } = 2;

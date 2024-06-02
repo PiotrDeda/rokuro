@@ -2,8 +2,8 @@ namespace Rokuro.Core;
 
 public static class App
 {
-	public static int FPSLimit => AppImpl.ActiveImpl.FPSLimit;
 	public static int DeltaTime => AppImpl.ActiveImpl.DeltaTime;
+	public static int PhysicsDeltaTime => AppImpl.ActiveImpl.PhysicsDeltaTime;
 
 	internal static IntPtr Renderer => AppImpl.ActiveImpl.Renderer;
 

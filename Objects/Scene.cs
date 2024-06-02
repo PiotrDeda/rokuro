@@ -49,6 +49,11 @@ public class Scene
 			gameObject.Coroutines.Execute();
 	}
 
+	internal void DoPhysics()
+	{
+		
+	}
+
 	internal void DoRender()
 	{
 		foreach (GameObject gameObject in GameObjects)

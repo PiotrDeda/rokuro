@@ -18,28 +18,17 @@ namespace Rokuro.Core;
 
 class AppImpl
 {
-	int _fpsLimit = 60;
 	IntPtr _renderer = IntPtr.Zero;
 
 	public AppImpl()
 	{
 		InitSDL();
-		FrameDelay = (uint)(1000 / _fpsLimit);
 	}
 
 	public static AppImpl ActiveImpl { get; set; } = new();
 
-	public int FPSLimit
-	{
-		get => _fpsLimit;
-		set
-		{
-			_fpsLimit = value;
-			FrameDelay = (uint)(1000 / value);
-		}
-	}
-
 	public int DeltaTime { get; set; }
+	public int PhysicsDeltaTime { get; set; } = 1000 / 120;
 
 	internal IntPtr Renderer
 	{
@@ -54,7 +43,6 @@ class AppImpl
 
 	IntPtr Window { get; set; }
 	bool Running { get; set; } = true;
-	uint FrameDelay { get; set; }
 
 	public virtual void Setup(AppProperties properties)
 	{
@@ -79,8 +67,6 @@ class AppImpl
 			.WithNamingConvention(UnderscoredNamingConvention.Instance)
 			.Build()
 			.Serialize(settings));
-
-		FPSLimit = settings.FPSLimit;
 
 		SDL.SDL_WindowFlags windowFlags = 0;
 		if (settings.Fullscreen == 0)
@@ -126,10 +112,15 @@ class AppImpl
 
 	public virtual void Run()
 	{
-		uint startTime, frameTime;
+		uint previous = SDL.SDL_GetTicks();
+		uint lag = 0;
+		uint current, elapsed;
 		while (Running)
 		{
-			startTime = SDL.SDL_GetTicks();
+			current = SDL.SDL_GetTicks();
+			elapsed = current - previous;
+			previous = current;
+			lag += elapsed;
 
 			while (SDL.SDL_PollEvent(out SDL.SDL_Event e) != 0)
 			{
@@ -154,17 +145,20 @@ class AppImpl
 				Input.HandleEvent(e);
 			}
 
+			while (lag >= PhysicsDeltaTime)
+			{
+				SceneManager.CurrentScene.DoPhysics();
+				lag -= (uint)PhysicsDeltaTime;
+			}
+
 			SceneManager.CurrentScene.DoCoroutines();
+			SceneManager.SwitchScenes();
+
 			Drawer.RenderStart();
 			SceneManager.CurrentScene.DoRender();
 			Drawer.RenderComplete();
-			SceneManager.SwitchScenes();
 
-			frameTime = SDL.SDL_GetTicks() - startTime;
-			if (frameTime < FrameDelay)
-				SDL.SDL_Delay(FrameDelay - frameTime);
-			frameTime = SDL.SDL_GetTicks() - startTime;
-			DeltaTime = (int)frameTime;
+			DeltaTime = (int)elapsed;
 		}
 
 		ShutdownSDL();
@@ -256,8 +250,5 @@ class AppImpl
 			"Whether to use vertical synchronization (synchronizing to display refresh rate). [Default: true]")]
 		[UsedImplicitly]
 		public bool VSync { get; set; } = true;
-
-		[YamlMember(Alias = "FpsLimit", Description = "Set max FPS limit. [Default: 60]")] [UsedImplicitly]
-		public int FPSLimit { get; set; } = 60;
 	}
 }

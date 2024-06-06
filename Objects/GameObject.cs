@@ -4,15 +4,18 @@ using Rokuro.Core;
 using Rokuro.Dtos;
 using Rokuro.Graphics;
 using Rokuro.MathUtils;
+using Rokuro.Physics;
 
 namespace Rokuro.Objects;
 
 public class GameObject
 {
+	public string Name { get; set; } = "";
 	public bool Enabled { get; set; } = true;
 	public Vector2I Position { get; set; } = Vector2I.Zero;
 	public Sprite? Sprite { get; set; }
 	public Camera? Camera { get; set; }
+	public PhysicsObject? PhysicsObject { get; set; }
 	public Coroutines Coroutines { get; } = new();
 
 	public IEnumerator MoveTo(Vector2I end, int durationMs, Func<float, float> interpolationFunction)
@@ -45,6 +48,7 @@ public class GameObject
 
 		var gameObject = (GameObject)Activator.CreateInstance(objectType)!;
 
+		gameObject.Name = dto.Name;
 		gameObject.Position = new(dto.PositionX, dto.PositionY);
 		gameObject.Camera = camera;
 

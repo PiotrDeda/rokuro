@@ -10,10 +10,12 @@ public record Vector2(float X, float Y)
 	public static Vector2 Right => new(1, 0);
 
 	public float Length => MathF.Sqrt(X * X + Y * Y);
+	public float LengthSquared => X * X + Y * Y;
 
 	public float Dot(Vector2 other) => X * other.X + Y * other.Y;
 	public float PerpDot(Vector2 other) => X * other.Y - Y * other.X;
 	public float Distance(Vector2 other) => (this - other).Length;
+	public float DistanceSquared(Vector2 other) => (this - other).LengthSquared;
 	public Vector2 Normalize() => this / Length;
 
 	public Vector2 Clamp(Vector2 min, Vector2 max) => new(
@@ -37,6 +39,9 @@ public record Vector2(float X, float Y)
 	public static Vector2 operator /(float left, Vector2 right) => new(left / right.X, left / right.Y);
 
 	public static Vector2 operator -(Vector2 value) => new(-value.X, -value.Y);
+
+	public static implicit operator Vector2(Vector2I vector) => new(vector.X, vector.Y);
+	public static explicit operator Vector2I(Vector2 vector) => new((int)vector.X, (int)vector.Y);
 
 	public override string ToString() => $"[{X}, {Y}]";
 }

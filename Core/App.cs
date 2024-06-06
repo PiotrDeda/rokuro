@@ -2,8 +2,15 @@ namespace Rokuro.Core;
 
 public static class App
 {
+	public static bool DebugRenderHitboxes => AppImpl.DebugRenderHitboxes;
+	public static float PhysicsDeltaTime => AppImpl.PhysicsDeltaTime;
 	public static int DeltaTime => AppImpl.ActiveImpl.DeltaTime;
-	public static int PhysicsDeltaTime => AppImpl.ActiveImpl.PhysicsDeltaTime;
+
+	public static float Gravity
+	{
+		get => AppImpl.ActiveImpl.Gravity;
+		set => AppImpl.ActiveImpl.Gravity = value;
+	}
 
 	internal static IntPtr Renderer => AppImpl.ActiveImpl.Renderer;
 

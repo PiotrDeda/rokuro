@@ -3,6 +3,7 @@ namespace Rokuro.MathUtils;
 public record Vector2I(int X, int Y)
 {
 	public float Length => MathF.Sqrt(X * X + Y * Y);
+	public float LengthSquared => X * X + Y * Y;
 
 	public static Vector2I Zero => new(0, 0);
 	public static Vector2I One => new(1, 1);
@@ -14,6 +15,7 @@ public record Vector2I(int X, int Y)
 	public float Dot(Vector2I other) => X * other.X + Y * other.Y;
 	public float PerpDot(Vector2I other) => X * other.Y - Y * other.X;
 	public float Distance(Vector2I other) => (this - other).Length;
+	public float DistanceSquared(Vector2I other) => (this - other).LengthSquared;
 
 	public Vector2I Clamp(Vector2I min, Vector2I max) => new(
 		X < min.X ? min.X : X > max.X ? max.X : X,

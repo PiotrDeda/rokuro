@@ -51,11 +51,54 @@ class DrawerImpl
 		}
 	}
 
+	public virtual void DrawPoint(Vector2I position, Color color)
+	{
+		SDL.SDL_SetRenderDrawColor(Renderer, color.R, color.G, color.B, color.A);
+		SDL.SDL_RenderDrawPoint(Renderer, position.X, position.Y);
+	}
+
 	public virtual void DrawLine(Vector2I start, Vector2I end, Color color, int thickness)
 	{
 		SDL.SDL_SetRenderDrawColor(Renderer, color.R, color.G, color.B, color.A);
 		for (int i = -thickness / 2; i < thickness - thickness / 2; i++)
 			SDL.SDL_RenderDrawLine(Renderer, start.X, start.Y + i, end.X, end.Y + i);
+	}
+
+	public virtual void DrawRect(Vector2I position, Vector2I size, Color color)
+	{
+		SDL.SDL_SetRenderDrawColor(Renderer, color.R, color.G, color.B, color.A);
+		SDL.SDL_Rect rect = new() { x = position.X, y = position.Y, w = size.X, h = size.Y };
+		SDL.SDL_RenderDrawRect(Renderer, ref rect);
+	}
+	
+	public virtual void DrawCircle(Vector2I position, int radius, Color color)
+	{
+		SDL.SDL_SetRenderDrawColor(Renderer, color.R, color.G, color.B, color.A);
+		// Midpoint circle algorithm
+		int x = 0;
+		int y = radius;
+		int p = 1 - radius;
+		while (x <= y)
+		{
+			SDL.SDL_RenderDrawPoint(Renderer, position.X + x, position.Y + y);
+			SDL.SDL_RenderDrawPoint(Renderer, position.X + y, position.Y + x);
+			SDL.SDL_RenderDrawPoint(Renderer, position.X - x, position.Y + y);
+			SDL.SDL_RenderDrawPoint(Renderer, position.X - y, position.Y + x);
+			SDL.SDL_RenderDrawPoint(Renderer, position.X + x, position.Y - y);
+			SDL.SDL_RenderDrawPoint(Renderer, position.X + y, position.Y - x);
+			SDL.SDL_RenderDrawPoint(Renderer, position.X - x, position.Y - y);
+			SDL.SDL_RenderDrawPoint(Renderer, position.X - y, position.Y - x);
+			x += 1;
+			if (p < 0)
+			{
+				p += 2 * x + 1;
+			}
+			else
+			{
+				y -= 1;
+				p += 2 * (x - y) + 1;
+			}
+		}
 	}
 
 	internal virtual IntPtr GetTextRawTexture(string text, Font font, Color color)

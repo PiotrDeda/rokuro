@@ -18,6 +18,12 @@ namespace Rokuro.Core;
 
 class AppImpl
 {
+	public static readonly bool DebugRenderHitboxes = false;
+	static readonly int PhysicsFps = 120;
+
+	public static readonly float PhysicsDeltaTime = 1f / PhysicsFps;
+	static readonly int PhysicsFramesDelay = 1000 / PhysicsFps;
+
 	IntPtr _renderer = IntPtr.Zero;
 
 	public AppImpl()
@@ -27,8 +33,8 @@ class AppImpl
 
 	public static AppImpl ActiveImpl { get; set; } = new();
 
-	public int DeltaTime { get; set; }
-	public int PhysicsDeltaTime { get; set; } = 1000 / 120;
+	public int DeltaTime { get; private set; }
+	public float Gravity { get; set; } = 9.81f;
 
 	internal IntPtr Renderer
 	{
@@ -145,10 +151,10 @@ class AppImpl
 				Input.HandleEvent(e);
 			}
 
-			while (lag >= PhysicsDeltaTime)
+			while (lag >= PhysicsFramesDelay)
 			{
 				SceneManager.CurrentScene.DoPhysics();
-				lag -= (uint)PhysicsDeltaTime;
+				lag -= (uint)PhysicsFramesDelay;
 			}
 
 			SceneManager.CurrentScene.DoCoroutines();

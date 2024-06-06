@@ -3,6 +3,7 @@ using Rokuro.Core;
 using Rokuro.Dtos;
 using Rokuro.Graphics;
 using Rokuro.MathUtils;
+using Rokuro.Physics;
 
 namespace Rokuro.Objects;
 
@@ -27,6 +28,19 @@ public class Scene
 		Cameras.Add(camera);
 	}
 
+	public GameObject GetGameObject(string name)
+	{
+		try
+		{
+			return GameObjects.First(gameObject => gameObject.Name.Equals(name));
+		}
+		catch (InvalidOperationException)
+		{
+			Logger.ThrowError($"GameObject \"{name}\" not found");
+			return null!;
+		}
+	}
+
 	public Camera GetCamera(string name)
 	{
 		try
@@ -40,6 +54,7 @@ public class Scene
 		}
 	}
 
+	public virtual void OnLoaded() {}
 	public virtual void OnEnter() {}
 
 	internal void DoCoroutines()
@@ -51,13 +66,48 @@ public class Scene
 
 	internal void DoPhysics()
 	{
-		
+		foreach ((GameObject gameObject, int index) in GameObjects.Select((go, i) => (go, i)))
+			foreach (GameObject other in GameObjects.Skip(index + 1))
+				if (gameObject != other && gameObject.PhysicsObject != null && other.PhysicsObject != null)
+				{
+					(bool isCollision, Vector2 normal, float penetration) =
+						gameObject.PhysicsObject.Intersects(other.PhysicsObject);
+					if (isCollision)
+					{
+						gameObject.PhysicsObject.DoCollision(other.PhysicsObject, normal, penetration);
+					}
+				}
+		foreach (GameObject gameObject in GameObjects)
+			gameObject.PhysicsObject?.DoPhysics();
+		foreach (GameObject gameObject in GameObjects)
+			if (gameObject.PhysicsObject != null)
+			{
+				gameObject.Position = (Vector2I)gameObject.PhysicsObject.Position;
+				foreach (IHitbox hitbox in gameObject.PhysicsObject.Hitboxes)
+					hitbox.Position = gameObject.Position + hitbox.Offset;
+			}
 	}
 
 	internal void DoRender()
 	{
 		foreach (GameObject gameObject in GameObjects)
 			gameObject.Draw();
+
+		if (App.DebugRenderHitboxes)
+			foreach (GameObject gameObject in GameObjects)
+				if (gameObject.PhysicsObject != null)
+					foreach (IHitbox hitbox in gameObject.PhysicsObject.Hitboxes)
+						if (hitbox is RectHitbox r)
+						{
+							Drawer.DrawRect((Vector2I)(r.Position - r.HalfSize), (Vector2I)(r.HalfSize * 2),
+								new(255, 0, 0, 255));
+							Drawer.DrawPoint((Vector2I)r.Position, new(0, 255, 0, 255));
+						}
+						else if (hitbox is CircleHitbox c)
+						{
+							Drawer.DrawCircle((Vector2I)c.Position, c.Radius, new(255, 0, 0, 255));
+							Drawer.DrawPoint((Vector2I)c.Position, new(0, 255, 0, 255));
+						}
 	}
 
 	internal void DoMouseOvers(Vector2I mousePosition)

@@ -158,11 +158,12 @@ class AppImpl
 			}
 
 			SceneManager.CurrentScene.DoCoroutines();
-			SceneManager.SwitchScenes();
 
 			Drawer.RenderStart();
 			SceneManager.CurrentScene.DoRender();
 			Drawer.RenderComplete();
+
+			SceneManager.SwitchScenes();
 
 			DeltaTime = (int)elapsed;
 		}

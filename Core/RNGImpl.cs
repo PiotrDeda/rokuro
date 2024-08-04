@@ -4,7 +4,12 @@ class RNGImpl
 {
 	public static RNGImpl ActiveImpl { get; set; } = new();
 
-	public Random Rand { get; } = new();
+	public Random Rand { get; protected set; } = new();
+	
+	public virtual void SetSeed(int seed)
+	{
+		Rand = new(seed);
+	}
 
 	public virtual int NextStandardInt(int mean, int deviation)
 	{

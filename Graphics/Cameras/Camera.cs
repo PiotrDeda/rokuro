@@ -24,9 +24,8 @@ public class Camera
 
 	public Vector2I? BoundaryMin { get; set; }
 	public Vector2I? BoundaryMax { get; set; }
-
-	float[] Scales { get; } = { 0.5f, 0.75f, 1.0f, 1.25f, 1.5f };
-	int SelectedScale { get; set; } = 2;
+	public float[] Scales { get; } = { 0.5f, 0.75f, 1.0f, 1.25f, 1.5f };
+	public int SelectedScale { get; set; } = 2;
 
 	public virtual Vector2I GetScreenPosition(Vector2I position) =>
 		new((int)((position.X - Position.X) * Scale), (int)((position.Y - Position.Y) * Scale));

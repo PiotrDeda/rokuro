@@ -4,6 +4,7 @@ namespace Rokuro.Core;
 
 public static class Logger
 {
+	public static void StartFileLogging(string filename = "latest.log") => LoggerImpl.ActiveImpl.StartFileLogging(filename);
 	public static void LogInfo(string message) => LoggerImpl.ActiveImpl.LogInfo(message);
 	public static void LogWarning(string message) => LoggerImpl.ActiveImpl.LogWarning(message);
 	public static void ThrowError(Exception exception) => LoggerImpl.ActiveImpl.ThrowError(exception);

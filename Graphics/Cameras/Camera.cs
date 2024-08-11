@@ -17,12 +17,13 @@ public class Camera
 		set
 		{
 			_position = value;
-			_position.Clamp(BoundaryMin, BoundaryMax);
+			if (BoundaryMin != null && BoundaryMax != null)
+				_position = _position.Clamp(BoundaryMin, BoundaryMax);
 		}
 	}
 
-	public Vector2I BoundaryMin { get; set; } = Vector2I.Zero;
-	public Vector2I BoundaryMax { get; set; } = Vector2I.Zero;
+	public Vector2I? BoundaryMin { get; set; }
+	public Vector2I? BoundaryMax { get; set; }
 
 	float[] Scales { get; } = { 0.5f, 0.75f, 1.0f, 1.25f, 1.5f };
 	int SelectedScale { get; set; } = 2;

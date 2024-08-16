@@ -36,6 +36,9 @@ public class Camera
 	public void DrawLine(Vector2I start, Vector2I end, Color color, int thickness) =>
 		Drawer.DrawLine(GetScreenPosition(start), GetScreenPosition(end), color, (int)(thickness * Scale));
 
+	public void DrawCircle(Vector2I position, int radius, Color color) =>
+		Drawer.DrawCircle(GetScreenPosition(position), (int)(radius * Scale), color);
+
 	public void CenterOn(Vector2I position) =>
 		Position = position - new Vector2I(Drawer.BaseWidth / 2, Drawer.BaseHeight / 2) / Scale;
 

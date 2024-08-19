@@ -8,6 +8,7 @@ public static class SpriteManager
 
 	public static T CreateSprite<T>(string name) where T : Sprite => SpriteManageImpl.ActiveImpl.CreateSprite<T>(name);
 	public static Sprite CreateSprite(string name, Type type) => SpriteManageImpl.ActiveImpl.CreateSprite(name, type);
+	public static Font GetFont(string name) => SpriteManageImpl.ActiveImpl.GetFont(name);
 
-	internal static void LoadTextures() => SpriteManageImpl.ActiveImpl.LoadTextures();
+	internal static void LoadTexturesAndFonts() => SpriteManageImpl.ActiveImpl.LoadTexturesAndFonts();
 }

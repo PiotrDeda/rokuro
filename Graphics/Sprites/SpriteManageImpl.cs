@@ -25,6 +25,7 @@ class SpriteManageImpl
 
 	IntPtr Renderer { get; } = App.Renderer;
 	Dictionary<string, Texture> Textures { get; } = new();
+	Dictionary<string, Font> Fonts { get; } = new();
 
 	public virtual T CreateSprite<T>(string name) where T : Sprite
 	{
@@ -44,13 +45,28 @@ class SpriteManageImpl
 		throw new();
 	}
 
-	internal virtual void LoadTextures()
+	public virtual Font GetFont(string name)
+	{
+		if (Fonts.TryGetValue(name, out Font? font))
+			return font;
+
+		Logger.ThrowError($"Font {name} not found");
+		throw new();
+	}
+
+	internal virtual void LoadTexturesAndFonts()
 	{
 		if (Directory.Exists(Path.Combine("assets", "textures")))
 		{
 			string[] files = Directory.GetFiles(Path.Combine("assets", "textures"), "*.png", SearchOption.AllDirectories);
 			foreach (string file in files)
 				AddTexture(file.Split(Path.DirectorySeparatorChar).Skip(2).Aggregate((a, b) => Path.Combine(a, b)));
+		}
+		if (Directory.Exists(Path.Combine("assets", "fonts")))
+		{
+			string[] files = Directory.GetFiles(Path.Combine("assets", "fonts"), "*.ttf", SearchOption.AllDirectories);
+			foreach (string file in files)
+				AddFont(file.Split(Path.DirectorySeparatorChar).Skip(2).Aggregate((a, b) => Path.Combine(a, b)));
 		}
 	}
 
@@ -75,6 +91,12 @@ class SpriteManageImpl
 		Textures.Add(filename.Replace(".png", "").Replace('\\', '/'),
 			new(SDL_image.IMG_LoadTexture(Renderer, Path.Combine("assets", "textures", filename)),
 				textureConfig.States, textureConfig.Frames, textureConfig.Delay));
+	}
+
+	void AddFont(string filename)
+	{
+		Fonts.Add(filename.Replace(".ttf", "").Replace('\\', '/'),
+			new(SDL_ttf.TTF_OpenFont(Path.Combine("assets", "fonts", filename), 20)));
 	}
 
 	Font LoadDefaultFont()

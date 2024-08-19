@@ -107,7 +107,7 @@ class AppImpl
 		Drawer.BaseHeight = properties.WindowHeight;
 		Drawer.BgColor = properties.BackgroundColor;
 
-		SpriteManager.LoadTextures();
+		SpriteManager.LoadTexturesAndFonts();
 		SoundManager.LoadSoundsAndMusic();
 
 		if (Directory.Exists(Path.Combine("assets", "autogen", "scenes")))

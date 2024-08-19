@@ -7,6 +7,7 @@ public class TextObject : GameObject
 {
 	Color _color;
 	Font _font = SpriteManager.DefaultFont;
+	int _fontSize = 20;
 	string _text = "";
 
 	public TextObject()
@@ -20,7 +21,7 @@ public class TextObject : GameObject
 		set
 		{
 			_text = value;
-			Sprite?.RefreshRawTexture(_text, Font, Color);
+			Sprite?.RefreshRawTexture(_text, Font, FontSize, Color);
 		}
 	}
 
@@ -30,7 +31,7 @@ public class TextObject : GameObject
 		set
 		{
 			_color = value;
-			Sprite?.RefreshRawTexture(Text, Font, _color);
+			Sprite?.RefreshRawTexture(Text, Font, FontSize, _color);
 		}
 	}
 
@@ -40,7 +41,17 @@ public class TextObject : GameObject
 		set
 		{
 			_font = value;
-			Sprite?.RefreshRawTexture(Text, _font, Color);
+			Sprite?.RefreshRawTexture(Text, _font, FontSize, Color);
+		}
+	}
+
+	public int FontSize
+	{
+		get => _fontSize;
+		set
+		{
+			_fontSize = value;
+			Sprite?.RefreshRawTexture(Text, Font, _fontSize, Color);
 		}
 	}
 

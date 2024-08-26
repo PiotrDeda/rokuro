@@ -13,13 +13,13 @@ public class Scene
 	public Coroutines Coroutines { get; } = new();
 
 	protected List<GameObject> GameObjects { get; } = new();
-	protected List<IMouseInteractable> MouseInteractables { get; } = new();
+	protected List<InteractableObject> MouseInteractables { get; } = new();
 	protected List<Camera> Cameras { get; } = new();
 
 	public void RegisterGameObject(GameObject gameObject)
 	{
 		GameObjects.Add(gameObject);
-		if (gameObject is IMouseInteractable interactable)
+		if (gameObject is InteractableObject interactable)
 			MouseInteractables.Add(interactable);
 	}
 
@@ -112,7 +112,7 @@ public class Scene
 
 	internal void DoMouseOvers(Vector2I mousePosition)
 	{
-		foreach (IMouseInteractable interactable in MouseInteractables)
+		foreach (InteractableObject interactable in MouseInteractables)
 			if (interactable.IsMouseOver(mousePosition))
 			{
 				if (!interactable.WasMouseoverHandled)
@@ -129,7 +129,7 @@ public class Scene
 
 	internal void DoClicks(Vector2I mousePosition)
 	{
-		foreach (IMouseInteractable interactable in MouseInteractables)
+		foreach (InteractableObject interactable in MouseInteractables)
 			if (interactable.IsMouseOver(mousePosition))
 				interactable.OnClick();
 	}

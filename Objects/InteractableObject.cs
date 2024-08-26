@@ -2,11 +2,11 @@ using Rokuro.MathUtils;
 
 namespace Rokuro.Objects;
 
-public class InteractableObject : GameObject, IMouseInteractable
+public class InteractableObject : GameObject
 {
-	public bool WasMouseoverHandled { get; set; } = false;
+	public bool WasMouseoverHandled { get; set; }
 
-	public bool IsMouseOver(Vector2I mousePosition)
+	public virtual bool IsMouseOver(Vector2I mousePosition)
 	{
 		if (!Enabled || Sprite == null || Camera == null)
 			return false;

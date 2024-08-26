@@ -66,15 +66,16 @@ public class Scene
 
 	internal void DoPhysics()
 	{
-		foreach ((GameObject gameObject, int index) in GameObjects.Select((go, i) => (go, i)))
-			foreach (GameObject other in GameObjects.Skip(index + 1))
-				if (gameObject != other && gameObject.PhysicsObject != null && other.PhysicsObject != null)
+		for (int i = 0; i < GameObjects.Count; i++)
+			for (int j = i + 1; j < GameObjects.Count; j++)
+				if (GameObjects[i] != GameObjects[j] && GameObjects[i].PhysicsObject != null &&
+					GameObjects[j].PhysicsObject != null)
 				{
 					(bool isCollision, Vector2 normal, float penetration) =
-						gameObject.PhysicsObject.Intersects(other.PhysicsObject);
+						GameObjects[i].PhysicsObject!.Intersects(GameObjects[j].PhysicsObject!);
 					if (isCollision)
 					{
-						gameObject.PhysicsObject.DoCollision(other.PhysicsObject, normal, penetration);
+						GameObjects[i].PhysicsObject!.DoCollision(GameObjects[j].PhysicsObject!, normal, penetration);
 					}
 				}
 		foreach (GameObject gameObject in GameObjects)
@@ -99,7 +100,7 @@ public class Scene
 					foreach (IHitbox hitbox in gameObject.PhysicsObject.Hitboxes)
 						if (hitbox is RectHitbox r)
 						{
-							Drawer.DrawRect((Vector2I)(r.Position - r.HalfSize), (Vector2I)(r.HalfSize * 2),
+							Drawer.DrawRect((Vector2I)(r.Position - r.HalfSizeV), (Vector2I)(r.HalfSizeV * 2),
 								new(255, 0, 0, 255));
 							Drawer.DrawPoint((Vector2I)r.Position, new(0, 255, 0, 255));
 						}

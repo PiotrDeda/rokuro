@@ -41,7 +41,7 @@ class DrawerImpl
 			}
 			else
 			{
-				SDL.SDL_Point origin = new() { x = sprite.Origin.X, y = sprite.Origin.Y };
+				SDL.SDL_Point origin = new() { x = sprite.Origin.Value.X, y = sprite.Origin.Value.Y };
 				SDL.SDL_RenderCopyEx(Renderer, rawTexture, sprite.GetClip(), ref rect, sprite.Rotation, ref origin, flip);
 			}
 		}

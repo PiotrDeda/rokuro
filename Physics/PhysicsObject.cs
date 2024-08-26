@@ -16,6 +16,8 @@ public class PhysicsObject
 		set
 		{
 			_mass = value;
+			if (CacheGravity)
+				GravityForce = new(0, App.Gravity * Mass);
 			if (value == 0)
 				InverseMass = 0;
 			else
@@ -26,14 +28,19 @@ public class PhysicsObject
 	public float Elasticity { get; set; } = 0.5f;
 	public bool IsAffectedByGravity { get; set; } = true;
 	public List<IHitbox> Hitboxes { get; } = new();
+	public bool CacheGravity { get; set; } = true;
 
+	Vector2 GravityForce { get; set; }
 	float InverseMass { get; set; } = 1;
 
 	public void DoPhysics()
 	{
 		Position += Velocity * App.PhysicsDeltaTime;
 		if (IsAffectedByGravity)
-			ApplyForce(new(0, App.Gravity * Mass));
+			if (CacheGravity)
+				ApplyForce(GravityForce);
+			else
+				ApplyForce(new(0, App.Gravity * Mass));
 	}
 
 	public void ApplyForce(Vector2 force)
@@ -47,12 +54,16 @@ public class PhysicsObject
 		{
 			foreach (IHitbox otherHitbox in other.Hitboxes)
 			{
+				if ((hitbox.Position.X - hitbox.Position.X) * (hitbox.Position.X - hitbox.Position.X) +
+					(hitbox.Position.Y - hitbox.Position.Y) * (hitbox.Position.Y - hitbox.Position.Y) >
+					hitbox.HalfSize + otherHitbox.HalfSize)
+					continue;
 				(bool isCollision, Vector2 normal, float penetration) = hitbox.Intersects(otherHitbox);
 				if (isCollision)
 					return (isCollision, normal, penetration);
 			}
 		}
-		return (false, new(float.NaN, float.NaN), 0);
+		return (false, Vector2.NaN, 0);
 	}
 
 	public void DoCollision(PhysicsObject other, Vector2 normal, float penetration)

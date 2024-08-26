@@ -18,7 +18,7 @@ public class Camera
 		{
 			_position = value;
 			if (BoundaryMin != null && BoundaryMax != null)
-				_position = _position.Clamp(BoundaryMin, BoundaryMax);
+				_position = _position.Clamp(BoundaryMin.Value, BoundaryMax.Value);
 		}
 	}
 

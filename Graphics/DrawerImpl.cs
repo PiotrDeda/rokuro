@@ -70,7 +70,7 @@ class DrawerImpl
 		SDL.SDL_Rect rect = new() { x = position.X, y = position.Y, w = size.X, h = size.Y };
 		SDL.SDL_RenderDrawRect(Renderer, ref rect);
 	}
-	
+
 	public virtual void DrawCircle(Vector2I position, int radius, Color color)
 	{
 		SDL.SDL_SetRenderDrawColor(Renderer, color.R, color.G, color.B, color.A);

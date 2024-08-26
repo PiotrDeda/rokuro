@@ -54,10 +54,10 @@ public static class Drawer
 
 	public static void DrawLine(Vector2I start, Vector2I end, Color color, int thickness) =>
 		DrawerImpl.ActiveImpl.DrawLine(start, end, color, thickness);
-	
+
 	public static void DrawRect(Vector2I position, Vector2I size, Color color) =>
 		DrawerImpl.ActiveImpl.DrawRect(position, size, color);
-	
+
 	public static void DrawCircle(Vector2I position, int radius, Color color) =>
 		DrawerImpl.ActiveImpl.DrawCircle(position, radius, color);
 

@@ -5,7 +5,7 @@ class RNGImpl
 	public static RNGImpl ActiveImpl { get; set; } = new();
 
 	public Random Rand { get; protected set; } = new();
-	
+
 	public virtual void SetSeed(int seed)
 	{
 		Rand = new(seed);

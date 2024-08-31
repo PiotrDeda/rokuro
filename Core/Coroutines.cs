@@ -4,30 +4,31 @@ namespace Rokuro.Core;
 
 public class Coroutines
 {
-	List<IEnumerator> CoroutineList { get; } = new();
+	List<Coroutine> CoroutineList { get; } = new();
 
 	public int Start(IEnumerator coroutine)
 	{
-		CoroutineList.Add(coroutine);
+		CoroutineList.Add(new(coroutine));
 		return CoroutineList.Count - 1;
 	}
 
 	public void Stop(int index)
 	{
-		CoroutineList.RemoveAt(index);
+		CoroutineList[index].IsEnabled = false;
 	}
 
 	public void StopAll()
 	{
-		CoroutineList.Clear();
+		foreach (Coroutine coroutine in CoroutineList)
+			coroutine.IsEnabled = false;
 	}
 
 	internal void Execute()
 	{
 		for (int i = 0; i < CoroutineList.Count; i++)
 		{
-			if (!CoroutineList[i].MoveNext())
-				CoroutineList.RemoveAt(i--);
+			if (CoroutineList[i].IsEnabled && !CoroutineList[i].CoroutineEnumerator.MoveNext())
+				Stop(i--);
 		}
 	}
 }

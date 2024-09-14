@@ -11,16 +11,29 @@ class SceneManagerImpl
 	List<Scene> Scenes { get; set; } = new();
 	Scene NextScene { get; set; } = new();
 
-	public virtual void SetNextScene(string sceneName)
+	public virtual Scene GetScene(string name)
 	{
-		Logger.LogInfo($"Switching scene from \"{CurrentScene.Name}\" to \"{sceneName}\"");
 		try
 		{
-			NextScene = Scenes.First(scene => scene.Name == sceneName);
+			return Scenes.First(scene => scene.Name == name);
 		}
 		catch (InvalidOperationException)
 		{
-			Logger.ThrowError($"Scene \"{sceneName}\" not found");
+			Logger.ThrowError($"Scene \"{name}\" not found");
+			return null!;
+		}
+	}
+
+	public virtual void SetNextScene(string name)
+	{
+		Logger.LogInfo($"Switching scene from \"{CurrentScene.Name}\" to \"{name}\"");
+		try
+		{
+			NextScene = Scenes.First(scene => scene.Name == name);
+		}
+		catch (InvalidOperationException)
+		{
+			Logger.ThrowError($"Scene \"{name}\" not found");
 		}
 	}
 

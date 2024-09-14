@@ -32,7 +32,7 @@ public class Scene
 	{
 		try
 		{
-			return GameObjects.First(gameObject => gameObject.Name.Equals(name));
+			return GameObjects.First(gameObject => gameObject.Name == name);
 		}
 		catch (InvalidOperationException)
 		{
@@ -45,7 +45,7 @@ public class Scene
 	{
 		try
 		{
-			return Cameras.First(camera => camera.Name.Equals(name));
+			return Cameras.First(camera => camera.Name == name);
 		}
 		catch (InvalidOperationException)
 		{

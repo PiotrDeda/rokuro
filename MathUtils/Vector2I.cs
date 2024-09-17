@@ -7,8 +7,8 @@ public struct Vector2I
 
 	public static readonly Vector2I Zero = new(0, 0);
 	public static readonly Vector2I One = new(1, 1);
-	public static readonly Vector2I Up = new(0, 1);
-	public static readonly Vector2I Down = new(0, -1);
+	public static readonly Vector2I Up = new(0, -1);
+	public static readonly Vector2I Down = new(0, 1);
 	public static readonly Vector2I Left = new(-1, 0);
 	public static readonly Vector2I Right = new(1, 0);
 

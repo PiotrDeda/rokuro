@@ -11,4 +11,4 @@ Write-Host "`n=== Packing ===`n"
 dotnet pack $project -c Release
 
 Write-Host "`n=== Pushing ===`n"
-dotnet nuget push Rokuro.$version.nupkg -s https://f.feedz.io/rokuro/rokuro/nuget/index.json -k $env:API_KEY
+dotnet nuget push bin/release/Rokuro.$version.nupkg -s https://f.feedz.io/rokuro/rokuro/nuget/index.json -k $env:API_KEY

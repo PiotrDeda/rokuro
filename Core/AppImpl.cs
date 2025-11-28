@@ -24,8 +24,6 @@ class AppImpl
 	public static readonly float PhysicsDeltaTime = 1f / PhysicsFps;
 	static readonly int PhysicsFramesDelay = 1000 / PhysicsFps;
 
-	IntPtr _renderer = IntPtr.Zero;
-
 	public AppImpl()
 	{
 		Logger.StartFileLogging();
@@ -41,12 +39,12 @@ class AppImpl
 	{
 		get
 		{
-			if (_renderer == IntPtr.Zero)
+			if (field == IntPtr.Zero)
 				Logger.ThrowError("App was not setup. Make sure to call App.Setup(AppProperties) before running!");
-			return _renderer;
+			return field;
 		}
-		private set => _renderer = value;
-	}
+		private set;
+	} = IntPtr.Zero;
 
 	IntPtr Window { get; set; }
 	bool Running { get; set; } = true;
@@ -75,15 +73,12 @@ class AppImpl
 			.Build()
 			.Serialize(settings));
 
-		SDL.SDL_WindowFlags windowFlags = 0;
-		if (settings.Fullscreen == 0)
-			windowFlags = SDL_WINDOW_RESIZABLE;
-		else if (settings.Fullscreen == 1)
-			windowFlags = SDL_WINDOW_FULLSCREEN;
-		else if (settings.Fullscreen == 2)
-			windowFlags = SDL_WINDOW_FULLSCREEN_DESKTOP;
-		else
-			Logger.ThrowError("Invalid fullscreen setting in settings.yaml");
+		SDL.SDL_WindowFlags windowFlags = settings.Fullscreen switch {
+			0 => SDL_WINDOW_RESIZABLE,
+			1 => SDL_WINDOW_FULLSCREEN,
+			2 => SDL_WINDOW_FULLSCREEN_DESKTOP,
+			_ => SDL_WINDOW_RESIZABLE
+		};
 		Window = SDL.SDL_CreateWindow(properties.Name, SDL.SDL_WINDOWPOS_UNDEFINED, SDL.SDL_WINDOWPOS_UNDEFINED,
 			properties.WindowWidth, properties.WindowHeight, windowFlags);
 		if (Window == IntPtr.Zero)
@@ -99,9 +94,11 @@ class AppImpl
 			Logger.ThrowSDLError("Renderer could not be created", ErrorSource.SDL);
 		SDL.SDL_SetRenderDrawColor(Renderer, 0x00, 0x00, 0x00, 0xFF);
 		SDL.SDL_RenderSetLogicalSize(Renderer, properties.WindowWidth, properties.WindowHeight);
-		if (settings.RenderQuality > 2)
-			Logger.ThrowError("Invalid render quality setting in settings.yaml");
-		SDL.SDL_SetHint(SDL.SDL_HINT_RENDER_SCALE_QUALITY, settings.RenderQuality.ToString());
+		SDL.SDL_SetHint(SDL.SDL_HINT_RENDER_SCALE_QUALITY, settings.RenderQuality switch {
+			0 => "0",
+			1 => "1",
+			_ => "2"
+		});
 
 		Drawer.BaseWidth = properties.WindowWidth;
 		Drawer.BaseHeight = properties.WindowHeight;
@@ -113,7 +110,7 @@ class AppImpl
 		if (Directory.Exists(Path.Combine("assets", "autogen", "scenes")))
 			SceneManager.LoadScenes(Directory.GetFiles(Path.Combine("assets", "autogen", "scenes"), "*.json")
 				.Select(path => JsonConvert.DeserializeObject<SceneDto>(File.ReadAllText(path))!)
-				.Select(sceneDto => Scene.FromDto(sceneDto))
+				.Select(Scene.FromDto)
 				.ToList());
 	}
 
@@ -121,11 +118,10 @@ class AppImpl
 	{
 		uint previous = SDL.SDL_GetTicks();
 		uint lag = 0;
-		uint current, elapsed;
 		while (Running)
 		{
-			current = SDL.SDL_GetTicks();
-			elapsed = current - previous;
+			uint current = SDL.SDL_GetTicks();
+			uint elapsed = current - previous;
 			previous = current;
 			lag += elapsed;
 
@@ -251,7 +247,9 @@ class AppImpl
 		[UsedImplicitly]
 		public int RenderQuality { get; set; } = 2;
 
-		[YamlMember(Description = "Whether to use hardware acceleration. [Default: true]")] [UsedImplicitly]
+		[YamlMember(Description =
+			"Whether to use hardware acceleration. [Default: true]")]
+		[UsedImplicitly]
 		public bool HardwareAcceleration { get; set; } = true;
 
 		[YamlMember(Description =

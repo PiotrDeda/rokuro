@@ -12,7 +12,7 @@ class SpriteManageImpl
 	public SpriteManageImpl()
 	{
 		DefaultFont = LoadDefaultFont();
-		IntPtr rectObj = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(SDL.SDL_Rect)));
+		IntPtr rectObj = Marshal.AllocHGlobal(Marshal.SizeOf<SDL.SDL_Rect>());
 		Marshal.StructureToPtr(new SDL.SDL_Rect { x = 0, y = 0, w = 0, h = 0 }, rectObj, false);
 		BlankRect = rectObj;
 	}
@@ -60,13 +60,13 @@ class SpriteManageImpl
 		{
 			string[] files = Directory.GetFiles(Path.Combine("assets", "textures"), "*.png", SearchOption.AllDirectories);
 			foreach (string file in files)
-				AddTexture(file.Split(Path.DirectorySeparatorChar).Skip(2).Aggregate((a, b) => Path.Combine(a, b)));
+				AddTexture(file.Split(Path.DirectorySeparatorChar).Skip(2).Aggregate(Path.Combine));
 		}
 		if (Directory.Exists(Path.Combine("assets", "fonts")))
 		{
 			string[] files = Directory.GetFiles(Path.Combine("assets", "fonts"), "*.ttf", SearchOption.AllDirectories);
 			foreach (string file in files)
-				AddFont(file.Split(Path.DirectorySeparatorChar).Skip(2).Aggregate((a, b) => Path.Combine(a, b)));
+				AddFont(file.Split(Path.DirectorySeparatorChar).Skip(2).Aggregate(Path.Combine));
 		}
 	}
 

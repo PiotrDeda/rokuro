@@ -5,17 +5,15 @@ namespace Rokuro.Physics;
 
 public class PhysicsObject
 {
-	float _mass = 1;
-
 	public Vector2 Position { get; set; } = Vector2.Zero;
 	public Vector2 Velocity { get; set; } = Vector2.Zero;
 
 	public float Mass
 	{
-		get => _mass;
+		get;
 		set
 		{
-			_mass = value;
+			field = value;
 			if (CacheGravity)
 				GravityForce = new(0, App.Gravity * Mass);
 			if (value == 0)
@@ -23,11 +21,11 @@ public class PhysicsObject
 			else
 				InverseMass = 1.0f / value;
 		}
-	}
+	} = 1;
 
 	public float Elasticity { get; set; } = 0.5f;
 	public bool IsAffectedByGravity { get; set; } = true;
-	public List<IHitbox> Hitboxes { get; } = new();
+	public List<IHitbox> Hitboxes { get; } = [];
 	public bool CacheGravity { get; set; } = true;
 
 	Vector2 GravityForce { get; set; }
@@ -37,16 +35,10 @@ public class PhysicsObject
 	{
 		Position += Velocity * App.PhysicsDeltaTime;
 		if (IsAffectedByGravity)
-			if (CacheGravity)
-				ApplyForce(GravityForce);
-			else
-				ApplyForce(new(0, App.Gravity * Mass));
+			ApplyForce(CacheGravity ? GravityForce : new(0, App.Gravity * Mass));
 	}
 
-	public void ApplyForce(Vector2 force)
-	{
-		Velocity += force * InverseMass;
-	}
+	public void ApplyForce(Vector2 force) => Velocity += force * InverseMass;
 
 	public (bool isCollision, Vector2 Normal, float penetration) Intersects(PhysicsObject other)
 	{

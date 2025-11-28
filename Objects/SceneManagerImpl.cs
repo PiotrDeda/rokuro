@@ -8,7 +8,7 @@ class SceneManagerImpl
 
 	internal Scene CurrentScene { get; private set; } = new();
 
-	List<Scene> Scenes { get; set; } = new();
+	List<Scene> Scenes { get; set; } = [];
 	Scene NextScene { get; set; } = new();
 
 	public virtual Scene GetScene(string name)

@@ -6,25 +6,23 @@ namespace Rokuro.Graphics;
 
 public class Camera
 {
-	Vector2I _position = Vector2I.Zero;
-
 	public string Name { get; set; } = "";
 	public virtual float Scale => Scales[SelectedScale];
 
 	public Vector2I Position
 	{
-		get => _position;
+		get;
 		set
 		{
-			_position = value;
+			field = value;
 			if (BoundaryMin != null && BoundaryMax != null)
-				_position = _position.Clamp(BoundaryMin.Value, BoundaryMax.Value);
+				field = field.Clamp(BoundaryMin.Value, BoundaryMax.Value);
 		}
-	}
+	} = Vector2I.Zero;
 
 	public Vector2I? BoundaryMin { get; set; }
 	public Vector2I? BoundaryMax { get; set; }
-	public float[] Scales { get; } = { 0.5f, 0.75f, 1.0f, 1.25f, 1.5f };
+	public float[] Scales { get; } = [0.5f, 0.75f, 1.0f, 1.25f, 1.5f];
 	public int DefaultScale { get; set; } = 2;
 	public int SelectedScale { get; set; } = 2;
 
@@ -36,8 +34,7 @@ public class Camera
 	public void DrawLine(Vector2I start, Vector2I end, Color color, int thickness) =>
 		Drawer.DrawLine(GetScreenPosition(start), GetScreenPosition(end), color, (int)(thickness * Scale));
 
-	public void DrawCircle(Vector2I position, int radius, Color color) =>
-		Drawer.DrawCircle(GetScreenPosition(position), (int)(radius * Scale), color);
+	public void DrawCircle(Vector2I position, int radius, Color color) => Drawer.DrawCircle(GetScreenPosition(position), (int)(radius * Scale), color);
 
 	public void CenterOn(Vector2I position) =>
 		Position = position - new Vector2I(Drawer.BaseWidth / 2, Drawer.BaseHeight / 2) / Scale;
@@ -58,7 +55,9 @@ public class Camera
 
 	internal static Camera FromDto(CameraDto dto)
 	{
-		Type type = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).SelectMany(a => a.GetTypes())
+		Type type = AppDomain.CurrentDomain.GetAssemblies()
+			.Where(a => !a.IsDynamic)
+			.SelectMany(a => a.GetTypes())
 			.FirstOrDefault(t => t.FullName != null && t.FullName.Equals(dto.Class))!;
 		var camera = (Camera)Activator.CreateInstance(type)!;
 		camera.Name = dto.Name;

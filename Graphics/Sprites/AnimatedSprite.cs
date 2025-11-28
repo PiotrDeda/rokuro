@@ -2,23 +2,19 @@ using Rokuro.Core;
 
 namespace Rokuro.Graphics;
 
-public class AnimatedSprite : Sprite
+public class AnimatedSprite(Texture texture) : Sprite(texture)
 {
-	int _state;
-
-	public AnimatedSprite(Texture texture) : base(texture) {}
-
 	public int State
 	{
-		get => _state;
+		get;
 		set
 		{
 			if (value < 0)
-				_state = 0;
+				field = 0;
 			else if (value >= Texture.StateCount)
-				_state = Texture.StateCount - 1;
+				field = Texture.StateCount - 1;
 			else
-				_state = value;
+				field = value;
 		}
 	}
 

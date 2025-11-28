@@ -37,13 +37,13 @@ class SoundManagerImpl
 		{
 			string[] files = Directory.GetFiles(Path.Combine("assets", "sounds"), "*.wav", SearchOption.AllDirectories);
 			foreach (string file in files)
-				AddSound(file.Split(Path.DirectorySeparatorChar).Skip(2).Aggregate((a, b) => Path.Combine(a, b)));
+				AddSound(file.Split(Path.DirectorySeparatorChar).Skip(2).Aggregate(Path.Combine));
 		}
 		if (Directory.Exists(Path.Combine("assets", "music")))
 		{
 			string[] files = Directory.GetFiles(Path.Combine("assets", "music"), "*.wav", SearchOption.AllDirectories);
 			foreach (string file in files)
-				AddMusic(file.Split(Path.DirectorySeparatorChar).Skip(2).Aggregate((a, b) => Path.Combine(a, b)));
+				AddMusic(file.Split(Path.DirectorySeparatorChar).Skip(2).Aggregate(Path.Combine));
 		}
 	}
 

@@ -5,8 +5,6 @@ namespace Rokuro.Graphics;
 
 public class Texture
 {
-	IntPtr _rawTexture;
-
 	internal Texture(IntPtr rawTexture, int stateCount, int frameCount, int delay)
 	{
 		FrameCount = frameCount;
@@ -19,7 +17,7 @@ public class Texture
 		{
 			for (int j = 0; j < frameCount; j++)
 			{
-				IntPtr obj = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(SDL.SDL_Rect)));
+				IntPtr obj = Marshal.AllocHGlobal(Marshal.SizeOf<SDL.SDL_Rect>());
 				Marshal.StructureToPtr(new SDL.SDL_Rect {
 					x = j * Width,
 					y = i * Height,
@@ -31,8 +29,6 @@ public class Texture
 		}
 	}
 
-	internal Texture(IntPtr rawTexture) : this(rawTexture, 1, 1, 30) {}
-
 	internal Texture() {}
 
 	internal int Width { get; private set; }
@@ -43,16 +39,16 @@ public class Texture
 
 	internal IntPtr RawTexture
 	{
-		get => _rawTexture;
+		get;
 		set
 		{
-			SDL.SDL_DestroyTexture(_rawTexture);
-			_rawTexture = value;
-			SDL.SDL_QueryTexture(_rawTexture, out _, out _, out int width, out int height);
+			SDL.SDL_DestroyTexture(field);
+			field = value;
+			SDL.SDL_QueryTexture(field, out _, out _, out int width, out int height);
 			Width = width / FrameCount;
 			Height = height / StateCount;
 		}
 	}
 
-	internal IntPtr[] Clips { get; } = new IntPtr[0];
+	internal IntPtr[] Clips { get; } = [];
 }

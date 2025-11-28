@@ -14,7 +14,7 @@ class DrawerImpl
 	public float HeightMultiplier { get; internal set; } = 1;
 	public int WidthOffset { get; internal set; }
 	public int HeightOffset { get; internal set; }
-	public Color BgColor { get; internal set; } = new(0, 0, 0, 255);
+	public Color BgColor { get; internal set; } = new(0, 0, 0);
 
 	IntPtr Renderer { get; } = App.Renderer;
 

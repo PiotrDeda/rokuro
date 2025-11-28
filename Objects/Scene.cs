@@ -13,8 +13,8 @@ public class Scene
 	public Coroutines Coroutines { get; } = new();
 
 	protected List<GameObject> GameObjects { get; } = new();
-	protected List<InteractableObject> MouseInteractables { get; } = new();
-	protected List<Camera> Cameras { get; } = new();
+	protected List<InteractableObject> MouseInteractables { get; } = [];
+	protected List<Camera> Cameras { get; } = [];
 
 	public void RegisterGameObject(GameObject gameObject)
 	{
@@ -101,13 +101,13 @@ public class Scene
 						if (hitbox is RectHitbox r)
 						{
 							Drawer.DrawRect((Vector2I)(r.Position - r.HalfSizeV), (Vector2I)(r.HalfSizeV * 2),
-								new(255, 0, 0, 255));
-							Drawer.DrawPoint((Vector2I)r.Position, new(0, 255, 0, 255));
+								new(255, 0, 0));
+							Drawer.DrawPoint((Vector2I)r.Position, new(0, 255, 0));
 						}
 						else if (hitbox is CircleHitbox c)
 						{
-							Drawer.DrawCircle((Vector2I)c.Position, c.Radius, new(255, 0, 0, 255));
-							Drawer.DrawPoint((Vector2I)c.Position, new(0, 255, 0, 255));
+							Drawer.DrawCircle((Vector2I)c.Position, c.Radius, new(255, 0, 0));
+							Drawer.DrawPoint((Vector2I)c.Position, new(0, 255, 0));
 						}
 	}
 

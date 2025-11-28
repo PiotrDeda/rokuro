@@ -1,6 +1,6 @@
 namespace Rokuro.MathUtils;
 
-public struct Vector2I
+public struct Vector2I(int x, int y)
 {
 	public float Length => MathF.Sqrt(X * X + Y * Y);
 	public float LengthSquared => X * X + Y * Y;
@@ -12,14 +12,8 @@ public struct Vector2I
 	public static readonly Vector2I Left = new(-1, 0);
 	public static readonly Vector2I Right = new(1, 0);
 
-	public int X;
-	public int Y;
-
-	public Vector2I(int x, int y)
-	{
-		X = x;
-		Y = y;
-	}
+	public int X = x;
+	public int Y = y;
 
 	public float Dot(Vector2I other) => X * other.X + Y * other.Y;
 	public float PerpDot(Vector2I other) => X * other.Y - Y * other.X;

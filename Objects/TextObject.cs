@@ -5,11 +5,6 @@ namespace Rokuro.Objects;
 
 public class TextObject : GameObject
 {
-	Color _color;
-	Font _font = SpriteManager.DefaultFont;
-	int _fontSize = 20;
-	string _text = "";
-
 	public TextObject()
 	{
 		base.Sprite = new TextSprite();
@@ -17,43 +12,43 @@ public class TextObject : GameObject
 
 	public string Text
 	{
-		get => _text;
+		get;
 		set
 		{
-			_text = value;
-			Sprite?.RefreshRawTexture(_text, Font, FontSize, Color);
+			field = value;
+			Sprite?.RefreshRawTexture(field, Font, FontSize, Color);
 		}
-	}
+	} = "";
 
 	public Color Color
 	{
-		get => _color;
+		get;
 		set
 		{
-			_color = value;
-			Sprite?.RefreshRawTexture(Text, Font, FontSize, _color);
+			field = value;
+			Sprite?.RefreshRawTexture(Text, Font, FontSize, field);
 		}
 	}
 
 	public Font Font
 	{
-		get => _font;
+		get;
 		set
 		{
-			_font = value;
-			Sprite?.RefreshRawTexture(Text, _font, FontSize, Color);
+			field = value;
+			Sprite?.RefreshRawTexture(Text, field, FontSize, Color);
 		}
-	}
+	} = SpriteManager.DefaultFont;
 
 	public int FontSize
 	{
-		get => _fontSize;
+		get;
 		set
 		{
-			_fontSize = value;
-			Sprite?.RefreshRawTexture(Text, Font, _fontSize, Color);
+			field = value;
+			Sprite?.RefreshRawTexture(Text, Font, field, Color);
 		}
-	}
+	} = 20;
 
 	public new TextSprite? Sprite => (TextSprite?)base.Sprite;
 }

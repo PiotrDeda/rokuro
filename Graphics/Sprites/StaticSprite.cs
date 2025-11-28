@@ -1,22 +1,18 @@
 namespace Rokuro.Graphics;
 
-public class StaticSprite : Sprite
+public class StaticSprite(Texture texture) : Sprite(texture)
 {
-	int _state;
-
-	public StaticSprite(Texture texture) : base(texture) {}
-
 	public int State
 	{
-		get => _state;
+		get;
 		set
 		{
 			if (value < 0)
-				_state = 0;
+				field = 0;
 			else if (value >= Texture.Clips.Length)
-				_state = Texture.Clips.Length - 1;
+				field = Texture.Clips.Length - 1;
 			else
-				_state = value;
+				field = value;
 		}
 	}
 

@@ -4,7 +4,7 @@ namespace Rokuro.Physics;
 
 public class RectHitbox : IHitbox
 {
-	static readonly Vector2[] Sides = { new(1, 0), new(-1, 0), new(0, 1), new(0, -1) };
+	static readonly Vector2[] Sides = [new(1, 0), new(-1, 0), new(0, 1), new(0, -1)];
 
 	public Vector2 HalfSizeV { get; set; } = Vector2.Zero;
 	public Vector2 Offset { get; set; } = Vector2.Zero;
@@ -38,12 +38,12 @@ public class RectHitbox : IHitbox
 			Vector2 maxB = r.Position + r.HalfSizeV;
 			Vector2 minB = r.Position - r.HalfSizeV;
 
-			float[] distances = {
+			float[] distances = [
 				maxB.X - minA.X,
 				maxA.X - minB.X,
 				maxB.Y - minA.Y,
 				maxA.Y - minB.Y
-			};
+			];
 
 			float penetration = float.MaxValue;
 			Vector2 normal = Vector2.Zero;

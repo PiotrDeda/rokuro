@@ -2,23 +2,19 @@ using Rokuro.Core;
 
 namespace Rokuro.Graphics;
 
-public class PlayableSprite : Sprite
+public class PlayableSprite(Texture texture) : Sprite(texture)
 {
-	int _state;
-
-	public PlayableSprite(Texture texture) : base(texture) {}
-
 	public int State
 	{
-		get => _state;
+		get;
 		set
 		{
 			if (value < 0)
-				_state = 0;
+				field = 0;
 			else if (value >= Texture.StateCount)
-				_state = Texture.StateCount - 1;
+				field = Texture.StateCount - 1;
 			else
-				_state = value;
+				field = value;
 		}
 	}
 
@@ -29,23 +25,21 @@ public class PlayableSprite : Sprite
 
 	internal override IntPtr GetClip()
 	{
-		if (IsPlaying)
+		if (!IsPlaying)
+			return SpriteManager.BlankRect;
+		CurrentTime += App.DeltaTime;
+		if (CurrentTime >= Texture.Delay)
 		{
-			CurrentTime += App.DeltaTime;
-			if (CurrentTime >= Texture.Delay)
+			CurrentTime = 0;
+			CurrentFrame++;
+			if (CurrentFrame >= Texture.FrameCount)
 			{
-				CurrentTime = 0;
-				CurrentFrame++;
-				if (CurrentFrame >= Texture.FrameCount)
-				{
-					IsPlaying = false;
-					Callback?.Invoke();
-					return SpriteManager.BlankRect;
-				}
+				IsPlaying = false;
+				Callback?.Invoke();
+				return SpriteManager.BlankRect;
 			}
-			return Texture.Clips[CurrentFrame + State * Texture.FrameCount];
 		}
-		return SpriteManager.BlankRect;
+		return Texture.Clips[CurrentFrame + State * Texture.FrameCount];
 	}
 
 	public void Play(Action? callback = null)

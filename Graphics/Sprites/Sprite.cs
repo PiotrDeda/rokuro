@@ -2,13 +2,8 @@ using Rokuro.MathUtils;
 
 namespace Rokuro.Graphics;
 
-public abstract class Sprite
+public abstract class Sprite(Texture texture)
 {
-	public Sprite(Texture texture)
-	{
-		Texture = texture;
-	}
-
 	public int Width => Texture.Width;
 	public int Height => Texture.Height;
 	public double Rotation { get; set; }
@@ -18,7 +13,7 @@ public abstract class Sprite
 	public bool FlipX { get; set; }
 	public bool FlipY { get; set; }
 
-	internal Texture Texture { get; }
+	internal Texture Texture { get; } = texture;
 
 	internal abstract IntPtr GetClip();
 }

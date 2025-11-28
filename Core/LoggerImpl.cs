@@ -32,13 +32,11 @@ class LoggerImpl
 	{
 		LogToFile(GetFormattedLog(exception.Message, LogLevel.Error));
 		SDL.SDL_LogCritical((int)SDL.SDL_LogCategory.SDL_LOG_CATEGORY_APPLICATION, exception.Message);
-		SDL.SDL_ShowSimpleMessageBox(SDL.SDL_MessageBoxFlags.SDL_MESSAGEBOX_ERROR, "An error has occurred",
-			exception.Message, IntPtr.Zero);
+		SDL.SDL_ShowSimpleMessageBox(SDL.SDL_MessageBoxFlags.SDL_MESSAGEBOX_ERROR, "An error has occurred", exception.Message, IntPtr.Zero);
 		throw exception;
 	}
 
-	protected virtual string GetFormattedLog(string message, LogLevel logLevel) =>
-		$"[{logLevel.ToString().ToUpper()}] [{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}";
+	protected virtual string GetFormattedLog(string message, LogLevel logLevel) => $"[{logLevel.ToString().ToUpper()}] [{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}";
 
 	protected virtual void LogToFile(string message) => LogFile?.WriteLine(message);
 

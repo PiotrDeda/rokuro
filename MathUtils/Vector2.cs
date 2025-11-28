@@ -1,6 +1,6 @@
 namespace Rokuro.MathUtils;
 
-public struct Vector2
+public struct Vector2(float x, float y)
 {
 	public static readonly Vector2 Zero = new(0, 0);
 	public static readonly Vector2 One = new(1, 1);
@@ -10,14 +10,8 @@ public struct Vector2
 	public static readonly Vector2 Right = new(1, 0);
 	public static readonly Vector2 NaN = new(float.NaN, float.NaN);
 
-	public float X;
-	public float Y;
-
-	public Vector2(float x, float y)
-	{
-		X = x;
-		Y = y;
-	}
+	public float X = x;
+	public float Y = y;
 
 	public float Length => MathF.Sqrt(X * X + Y * Y);
 	public float LengthSquared => X * X + Y * Y;

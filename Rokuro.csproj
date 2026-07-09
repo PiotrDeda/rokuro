@@ -8,7 +8,7 @@
 		<Authors>Piotr Deda</Authors>
 		<Company>Piotr Deda</Company>
 		<PackageDescription>Simple C#/SDL engine for 2D RPG games</PackageDescription>
-		<RepositoryUrl>https://github.com/PiotrDeda/rokuro</RepositoryUrl>
+		<RepositoryUrl>https://github.com/PiotrDeda/rokuro-legacy</RepositoryUrl>
 	</PropertyGroup>
 
 	<ItemGroup>

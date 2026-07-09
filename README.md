@@ -6,11 +6,11 @@ Rokuro is a C# game engine using [SDL](http://libsdl.org/), made as a master's t
 
 ### Should I use this?
 
-As Rokuro is mostly a project made for educational purposes, I wouldn't recommended using it for any serious work. However, if you like to experiment with game engines and low-level games, feel free to take a look.
+As Rokuro is mostly a project made for educational purposes, I wouldn't recommend using it for any serious work. However, if you like to experiment with game engines and low-level games, feel free to take a look.
 
 ### How to create a game with this?
 
-See the [relevant wiki page](https://github.com/PiotrDeda/rokuro/wiki/Creating-a-game).
+See the [relevant wiki page](https://github.com/PiotrDeda/rokuro-legacy/wiki/Creating-a-game).
 
 ### Why the name?
 
